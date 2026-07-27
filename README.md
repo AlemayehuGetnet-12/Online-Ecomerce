@@ -1,442 +1,581 @@
 # Alex Store - Online E-Commerce Management System
 
-A complete, production-ready full-stack e-commerce application built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
+Alex Store is a full-stack e-commerce application built with the MERN stack: MongoDB, Express.js, React.js, and Node.js.
 
-## 🚀 Features
+The project is designed to provide customers with a modern online shopping experience while giving administrators tools to manage products, categories, customers, inventory, orders, payments, and sales reports.
+
+> Project status: This project is under active development. Some production features, including real payment gateway integration, still require configuration and testing with official provider APIs.
+
+## Features
 
 ### Customer Features
-- ✅ User authentication (Register, Login, Logout)
-- ✅ Multi-language support (English, Amharic, Afaan Oromo, Tigrinya, Arabic, French)
-- ✅ Product browsing with search, filter, and sort
-- ✅ Product details with reviews and ratings
-- ✅ Shopping cart management
-- ✅ Wishlist functionality
-- ✅ Secure checkout process
-- ✅ Multiple payment methods (Telebirr, CBE Birr, Cash on Delivery)
-- ✅ Order tracking and history
-- ✅ User profile management
-- ✅ Dark/Light theme toggle
-- ✅ Responsive design (Mobile, Tablet, Desktop)
+
+- User registration, login, and logout
+- Multi-language support
+- Product search, filtering, and sorting
+- Product details, ratings, and reviews
+- Shopping cart
+- Wishlist
+- Checkout
+- Multiple payment options
+- Order history and tracking
+- User profile management
+- Light and dark themes
+- Responsive design for mobile, tablet, and desktop
 
 ### Admin Features
-- ✅ Admin dashboard with analytics
-- ✅ Product management (CRUD operations)
-- ✅ Category management
-- ✅ Order management and status updates
-- ✅ Customer management
-- ✅ Inventory tracking and low-stock alerts
-- ✅ Payment management
-- ✅ Sales reports and analytics
-- ✅ Revenue tracking
 
-## 🛠️ Technology Stack
+- Admin dashboard
+- Product management
+- Category management
+- Customer management
+- Order management
+- Order status updates
+- Inventory tracking
+- Low-stock monitoring
+- Payment management
+- Sales reports
+- Revenue tracking
+- Business analytics
+
+## Technology Stack
 
 ### Frontend
-- **React.js 18** - UI library
-- **React Router v6** - Client-side routing
-- **Tailwind CSS** - Utility-first CSS framework
-- **Axios** - HTTP client
-- **React Hot Toast** - Toast notifications
-- **React Icons** - Icon library
-- **Framer Motion** - Animation library
-- **i18next** - Internationalization framework
-- **Vite** - Build tool
+
+- React.js 18
+- React Router v6
+- Tailwind CSS
+- Axios
+- React Hot Toast
+- React Icons
+- Framer Motion
+- i18next
+- Vite
 
 ### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - ODM for MongoDB
-- **JWT** - Authentication
-- **bcryptjs** - Password hashing
-- **Cloudinary** - Image storage (configuration ready)
 
-## 📁 Project Structure
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT
+- bcryptjs
+- Cloudinary
 
-```
+## Project Structure
+
+```text
 Alex-Store/
-├── client/                 # React frontend
+├── client/
 │   ├── public/
 │   └── src/
-│       ├── assets/        # Images and static files
-│       ├── components/    # React components
-│       │   ├── common/    # Reusable components
-│       │   ├── admin/     # Admin-specific components
-│       │   └── customer/  # Customer-specific components
-│       ├── context/       # React Context providers
-│       ├── hooks/         # Custom hooks
-│       ├── locales/       # Translation files (6 languages)
-│       ├── pages/         # Page components
-│       │   ├── admin/     # Admin pages
-│       │   └── customer/  # Customer pages
-│       ├── services/      # API service layer
-│       ├── utils/         # Utility functions
-│       ├── App.jsx        # Main App component
-│       ├── main.jsx       # Entry point
-│       └── i18n.js        # i18next configuration
+│       ├── assets/
+│       ├── components/
+│       │   ├── common/
+│       │   ├── admin/
+│       │   └── customer/
+│       ├── context/
+│       ├── hooks/
+│       ├── locales/
+│       ├── pages/
+│       │   ├── admin/
+│       │   └── customer/
+│       ├── services/
+│       ├── utils/
+│       ├── App.jsx
+│       ├── main.jsx
+│       └── i18n.js
 │
-├── server/                # Node.js backend
-│   ├── config/           # Configuration files
-│   │   ├── database.js   # MongoDB connection
-│   │   └── cloudinary.js # Cloudinary config
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware
-│   ├── models/           # Mongoose models
-│   ├── routes/           # API routes
-│   ├── services/         # Business logic
-│   │   ├── telebirrService.js  # Telebirr payment
-│   │   └── cbeBirrService.js   # CBE Birr payment
-│   ├── utils/            # Utility functions
-│   └── server.js         # Entry point
+├── server/
+│   ├── config/
+│   │   ├── database.js
+│   │   └── cloudinary.js
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   │   ├── telebirrService.js
+│   │   └── cbeBirrService.js
+│   ├── utils/
+│   └── server.js
 │
-├── .env.example          # Environment variables template
-├── .gitignore           # Git ignore rules
-└── README.md            # This file
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
-## 🚀 Installation & Setup
+## Requirements
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (local or MongoDB Atlas)
+Before running the project, install:
+
+- Node.js v16 or higher
+- MongoDB locally or a MongoDB Atlas account
 - npm or yarn
+- Git
+
+## Installation
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd Alex-Store
 ```
 
-### 2. Backend Setup
+### 2. Install Backend Dependencies
 
 ```bash
 cd server
 npm install
 ```
 
-Create `.env` file in the server directory:
+Create a `.env` file inside the `server` directory.
+
+Example:
+
 ```env
 PORT=5000
 NODE_ENV=development
 
-# MongoDB
 MONGO_URI=mongodb://localhost:27017/alex-store
-# Or use MongoDB Atlas:
-# MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/alex-store
 
-# JWT
 JWT_SECRET=your_super_secret_jwt_key_change_in_production
 JWT_EXPIRE=30d
 
-# Cloudinary (for image uploads)
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-# Telebirr Payment (add official credentials)
 TELEBIRR_API_URL=https://api.telebirr.et
 TELEBIRR_API_KEY=your_telebirr_api_key
 TELEBIRR_API_SECRET=your_telebirr_api_secret
 TELEBIRR_MERCHANT_ID=your_merchant_id
 TELEBIRR_APP_ID=your_app_id
 
-# CBE Birr Payment (add official credentials)
 CBE_BIRR_API_URL=https://api.cbebirr.et
 CBE_BIRR_API_KEY=your_cbe_birr_api_key
 CBE_BIRR_API_SECRET=your_cbe_birr_api_secret
 CBE_BIRR_MERCHANT_ID=your_merchant_id
 
-# Frontend URL
 CLIENT_URL=http://localhost:3000
 ```
 
-Start the backend server:
+Start the backend:
+
 ```bash
 npm run dev
 ```
 
-The API will run on `http://localhost:5000`
+The backend API runs on:
 
-### 3. Frontend Setup
+```text
+http://localhost:5000
+```
+
+### 3. Install Frontend Dependencies
+
+Open a new terminal:
 
 ```bash
 cd client
 npm install
 ```
 
-Start the frontend development server:
+Start the frontend:
+
 ```bash
 npm run dev
 ```
 
-The app will run on `http://localhost:3000`
+The frontend will run on the local development URL provided by Vite.
 
-## 📊 Database Models
+## Database Models
 
-### User Model
-- name, email, password (hashed)
-- phone, address, avatar
-- role (customer/admin)
-- wishlist array
-- timestamps
+The application uses MongoDB with Mongoose.
 
-### Product Model
-- name, description, price, discount
-- category, brand, stock
-- images array (Cloudinary URLs)
-- rating, reviewCount, soldCount
-- slug, tags, isFeatured
-- timestamps
+### User
 
-### Category Model
-- name, description, image
-- slug, productCount
-- timestamps
+- Name
+- Email
+- Hashed password
+- Phone
+- Address
+- Avatar
+- Role
+- Wishlist
+- Timestamps
 
-### Order Model
-- user, items array
-- shippingAddress
-- itemsTotal, shippingCost, totalAmount
-- paymentMethod, paymentStatus
-- orderStatus, statusHistory
-- timestamps
+### Product
 
-### Payment Model
-- user, order, amount
-- paymentMethod (telebirr/cbe_birr/cash_on_delivery)
-- transactionId, referenceNumber
-- paymentStatus, gatewayResponse
-- timestamps
+- Name
+- Description
+- Price
+- Discount
+- Category
+- Brand
+- Stock
+- Images
+- Rating
+- Review count
+- Sold count
+- Slug
+- Tags
+- Featured status
+- Timestamps
 
-### Review Model
-- user, product, rating, comment
-- isVerifiedPurchase
-- timestamps
+### Category
 
-## 🔐 API Endpoints
+- Name
+- Description
+- Image
+- Slug
+- Product count
+- Timestamps
+
+### Order
+
+- User
+- Items
+- Shipping address
+- Items total
+- Shipping cost
+- Total amount
+- Payment method
+- Payment status
+- Order status
+- Status history
+- Timestamps
+
+### Payment
+
+- User
+- Order
+- Amount
+- Payment method
+- Transaction ID
+- Reference number
+- Payment status
+- Gateway response
+- Timestamps
+
+### Review
+
+- User
+- Product
+- Rating
+- Comment
+- Verified purchase status
+- Timestamps
+
+## API Endpoints
 
 ### Authentication
-```
-POST   /api/auth/register        # Register new user
-POST   /api/auth/login           # Login user
-GET    /api/auth/me              # Get current user
-PUT    /api/auth/profile         # Update profile
-PUT    /api/auth/change-password # Change password
-GET    /api/auth/wishlist        # Get wishlist
-POST   /api/auth/wishlist/:id    # Add to wishlist
-DELETE /api/auth/wishlist/:id    # Remove from wishlist
+
+```text
+POST   /api/auth/register
+POST   /api/auth/login
+GET    /api/auth/me
+PUT    /api/auth/profile
+PUT    /api/auth/change-password
+GET    /api/auth/wishlist
+POST   /api/auth/wishlist/:id
+DELETE /api/auth/wishlist/:id
 ```
 
 ### Products
-```
-GET    /api/products                   # Get all products
-GET    /api/products/featured          # Get featured products
-GET    /api/products/best-selling      # Get best-selling products
-GET    /api/products/on-sale           # Get products on sale
-GET    /api/products/:id               # Get single product
-GET    /api/products/:id/related       # Get related products
-POST   /api/products                   # Create product (Admin)
-PUT    /api/products/:id               # Update product (Admin)
-DELETE /api/products/:id               # Delete product (Admin)
-PUT    /api/products/:id/stock         # Update stock (Admin)
-GET    /api/products/admin/low-stock   # Get low-stock products (Admin)
+
+```text
+GET    /api/products
+GET    /api/products/featured
+GET    /api/products/best-selling
+GET    /api/products/on-sale
+GET    /api/products/:id
+GET    /api/products/:id/related
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+PUT    /api/products/:id/stock
+GET    /api/products/admin/low-stock
 ```
 
 ### Categories
-```
-GET    /api/categories        # Get all categories
-GET    /api/categories/:id    # Get single category
-POST   /api/categories        # Create category (Admin)
-PUT    /api/categories/:id    # Update category (Admin)
-DELETE /api/categories/:id    # Delete category (Admin)
+
+```text
+GET    /api/categories
+GET    /api/categories/:id
+POST   /api/categories
+PUT    /api/categories/:id
+DELETE /api/categories/:id
 ```
 
 ### Orders
-```
-POST   /api/orders                  # Create order
-GET    /api/orders/my-orders        # Get user's orders
-GET    /api/orders/:id              # Get single order
-PUT    /api/orders/:id/cancel       # Cancel order
-GET    /api/orders                  # Get all orders (Admin)
-PUT    /api/orders/:id/status       # Update order status (Admin)
-GET    /api/orders/stats            # Get order statistics (Admin)
+
+```text
+POST   /api/orders
+GET    /api/orders/my-orders
+GET    /api/orders/:id
+PUT    /api/orders/:id/cancel
+GET    /api/orders
+PUT    /api/orders/:id/status
+GET    /api/orders/stats
 ```
 
 ### Payments
-```
-POST   /api/payments/telebirr/create  # Create Telebirr payment
-POST   /api/payments/telebirr/verify  # Verify Telebirr payment
-POST   /api/payments/cbebirr/create   # Create CBE Birr payment
-POST   /api/payments/cbebirr/verify   # Verify CBE Birr payment
-GET    /api/payments/history          # Get payment history
-GET    /api/payments                  # Get all payments (Admin)
-PUT    /api/payments/:id              # Update payment status (Admin)
+
+```text
+POST   /api/payments/telebirr/create
+POST   /api/payments/telebirr/verify
+POST   /api/payments/cbebirr/create
+POST   /api/payments/cbebirr/verify
+GET    /api/payments/history
+GET    /api/payments
+PUT    /api/payments/:id
 ```
 
 ### Reviews
-```
-GET    /api/reviews/product/:id  # Get product reviews
-POST   /api/reviews              # Create review
-PUT    /api/reviews/:id          # Update review
-DELETE /api/reviews/:id          # Delete review
-GET    /api/reviews/my-reviews   # Get user's reviews
+
+```text
+GET    /api/reviews/product/:id
+POST   /api/reviews
+PUT    /api/reviews/:id
+DELETE /api/reviews/:id
+GET    /api/reviews/my-reviews
 ```
 
-### Reports (Admin Only)
-```
-GET    /api/reports/dashboard  # Dashboard summary
-GET    /api/reports/sales      # Sales report
-GET    /api/reports/revenue    # Revenue report
-GET    /api/reports/products   # Product performance
-GET    /api/reports/customers  # Customer analytics
+### Admin Reports
+
+```text
+GET    /api/reports/dashboard
+GET    /api/reports/sales
+GET    /api/reports/revenue
+GET    /api/reports/products
+GET    /api/reports/customers
 ```
 
-## 💳 Payment Integration
+## Payment System
 
-### Current Implementation
-The payment system uses a **service abstraction pattern** that supports:
+The project is designed to support:
+
 - Telebirr
 - CBE Birr
 - Cash on Delivery
 
-### Mock Implementation
-For development/testing, the payment services use mock responses when API credentials are not configured.
+For development and testing, payment services may use mock responses when real API credentials are not configured.
 
-### Production Integration
-To integrate with **official payment gateways**:
+For production payment processing:
 
-1. **Obtain API Credentials** from Telebirr/CBE Birr
-2. **Add credentials** to `.env` file
-3. **Replace mock implementations** in:
-   - `server/services/telebirrService.js`
-   - `server/services/cbeBirrService.js`
-4. **Implement actual API calls** following official documentation
-5. **Test thoroughly** in sandbox environment
+1. Obtain official API credentials from the payment provider.
+2. Add the credentials to the server `.env` file.
+3. Configure the payment service.
+4. Implement the required official API calls.
+5. Implement payment verification and callback handling.
+6. Test the payment flow thoroughly before going live.
 
-The architecture is designed for easy integration once official API access is available.
+Payment service files:
 
-## 🌍 Multi-Language Support
+```text
+server/services/telebirrService.js
+server/services/cbeBirrService.js
+```
 
-The application supports **6 languages**:
-1. **English** (en)
-2. **Amharic** (አማርኛ) (am)
-3. **Afaan Oromo** (om)
-4. **Tigrinya** (ትግርኛ) (ti)
-5. **Arabic** (العربية) (ar) - with RTL support
-6. **French** (Français) (fr)
+> Real production payment processing requires official payment gateway credentials and implementation based on the provider's current documentation.
 
-Translation files are located in `client/src/locales/`
+## Multi-Language Support
 
-### Adding New Translations
-1. Create new JSON file in `client/src/locales/`
-2. Follow the existing translation structure
-3. Add language to `client/src/i18n.js`
-4. Update `LanguageSwitcher` component
+The project is designed to support six languages:
 
-## 🎨 Theme Support
+1. English (`en`)
+2. Amharic (`am`)
+3. Afaan Oromo (`om`)
+4. Tigrinya (`ti`)
+5. Arabic (`ar`)
+6. French (`fr`)
 
-The application supports **Light** and **Dark** themes:
-- Theme preference is saved in localStorage
-- Smooth transitions between themes
-- All components are theme-aware
-- Tailwind CSS dark mode classes
+Translation files are located in:
 
-## 📱 Responsive Design
+```text
+client/src/locales/
+```
 
-The application is fully responsive:
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: > 1024px
+To add a new language:
 
-## 🔒 Security Features
+1. Create a translation file.
+2. Follow the existing translation structure.
+3. Register the language in `client/src/i18n.js`.
+4. Add the language to the language switcher.
 
-- JWT-based authentication
+Arabic includes RTL support.
+
+## Theme Support
+
+Alex Store supports:
+
+- Light mode
+- Dark mode
+- Saved theme preference
+- Smooth theme transitions
+- Theme-aware components
+- Tailwind CSS dark mode
+
+## Responsive Design
+
+The application is designed for:
+
+- Mobile devices
+- Tablets
+- Desktop computers
+
+## Security
+
+The project includes:
+
+- JWT authentication
 - Password hashing with bcrypt
-- Protected routes (frontend and backend)
-- Role-based authorization (customer/admin)
+- Protected frontend routes
+- Protected backend routes
+- Role-based authorization
 - Input validation
 - CORS configuration
 - Secure HTTP headers
-- Environment variables for sensitive data
+- Environment variables for sensitive configuration
 
-## 🚀 Deployment
+For production deployment, use strong secrets, HTTPS, secure environment variables, and up-to-date security practices.
 
-### Frontend (Vercel)
+## Deployment
+
+### Frontend
+
+Build the React application:
+
 ```bash
 cd client
 npm run build
-# Deploy the 'dist' folder to Vercel
 ```
 
-### Backend (Render/Railway)
+The production build is generated in the `dist` directory.
+
+The frontend can be deployed to a hosting service such as Vercel.
+
+### Backend
+
+The Node.js and Express backend can be deployed to a Node.js hosting platform such as Render or Railway.
+
+Before deployment:
+
+- Configure production environment variables.
+- Set the production MongoDB connection string.
+- Configure the frontend URL.
+- Configure Cloudinary credentials.
+- Configure payment credentials.
+- Set `NODE_ENV=production`.
+
+### MongoDB Atlas
+
+For a cloud database:
+
+1. Create a MongoDB Atlas cluster.
+2. Create a database user.
+3. Configure network access.
+4. Copy the MongoDB connection string.
+5. Add it to `MONGO_URI`.
+
+### Cloudinary
+
+For image storage:
+
+1. Create a Cloudinary account.
+2. Get the required API credentials.
+3. Add them to the backend environment variables.
+4. Configure image upload functionality.
+
+## Project Status
+
+Alex Store is currently under development.
+
+The project is being developed around the following core areas:
+
+- Authentication
+- Product management
+- Category management
+- Shopping cart
+- Wishlist
+- Orders
+- Payments
+- Reviews
+- Inventory
+- Admin reports
+- Multi-language support
+
+Additional implementation and testing may be required before using the project in a production business environment.
+
+### Planned Improvements
+
+- Complete all customer pages
+- Complete all admin dashboard pages
+- Improve form validation
+- Improve loading and error handling
+- Add pagination
+- Add dashboard charts
+- Complete API testing
+- Test authentication flows
+- Test order placement
+- Test payment workflows
+- Test admin functionality
+- Perform cross-browser testing
+- Complete mobile responsiveness testing
+
+## Contributing
+
+Contributions and improvements are welcome.
+
+To contribute:
+
+1. Fork the repository.
+2. Create a feature branch.
+
 ```bash
-cd server
-# Set environment variables on hosting platform
-# Deploy with Node.js environment
+git checkout -b feature/your-feature
 ```
 
-### Database (MongoDB Atlas)
-1. Create cluster on MongoDB Atlas
-2. Get connection string
-3. Update `MONGO_URI` in `.env`
+3. Make your changes.
+4. Commit your changes.
 
-### Images (Cloudinary)
-1. Create Cloudinary account
-2. Get API credentials
-3. Update Cloudinary variables in `.env`
+```bash
+git add .
+git commit -m "Add your feature"
+```
 
-## 📝 Remaining Implementation Tasks
+5. Push your branch.
 
-### Frontend Pages (To be completed)
-1. Create all customer pages (Home, Products, ProductDetails, Cart, Wishlist, Checkout, etc.)
-2. Create all admin pages (AdminDashboard, ProductManagement, CategoryManagement, etc.)
-3. Implement forms with validation
-4. Add loading states and error handling
-5. Create product cards and lists
-6. Implement pagination
-7. Add charts for admin dashboard (using Chart.js or Recharts)
+```bash
+git push origin feature/your-feature
+```
 
-### Testing
-1. Test all API endpoints
-2. Test authentication flow
-3. Test order placement
-4. Test payment flows
-5. Test admin functionality
-6. Cross-browser testing
-7. Mobile responsiveness testing
+6. Open a Pull Request.
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
+## License
 
 This project is open-source and available for educational and commercial purposes.
 
-## 👨‍💻 Author
+## Author
 
-**Alex Store Development Team**
+Alex Store Development Team
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - React.js community
 - Node.js community
-- MongoDB documentation
-- Tailwind CSS
-- All open-source contributors
+- MongoDB community
+- Express.js community
+- Tailwind CSS community
+- Vite community
+- Open-source contributors
+
+## Support
+
+If you find a problem or have a suggestion, please open an issue in the GitHub repository.
 
 ---
 
-**Note**: This is a comprehensive e-commerce platform suitable for:
-- Real business deployment
-- University/final-year projects
-- Professional portfolio
-- Learning full-stack development
-
-For questions or support, please open an issue in the repository.
-#   O l i n e - E c o m e r c e  
- 
+Built with the MERN stack.
