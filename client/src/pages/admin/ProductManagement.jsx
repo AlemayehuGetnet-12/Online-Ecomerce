@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import AdminLayout from '../../components/admin/AdminLayout'
 import Loader from '../../components/common/Loader'

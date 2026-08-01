@@ -229,8 +229,90 @@ export const verifyCBEBirrPaymentController = async (req, res) => {
   }
 }
 
-// @desc    Get payment history
-// @route   GET /api/payments/history
+// @desc    Admin approve payment (mark as paid + confirm order)
+// @route   POST /api/payments/:id/approve
+// @access  Private/Admin
+export const approvePayment = async (req, res) => {
+  try {
+    const { id }   = req.params
+    const { notes } = req.body
+
+    const payment = await Payment.findById(id).populate('user', 'name email')
+    if (!payment) {
+      return res.status(404).json({ success: false, message: 'Payment not found' })
+    }
+
+    if (payment.paymentStatus === 'paid') {
+      return res.status(400).json({ success: false, message: 'Payment is already approved' })
+    }
+
+    // Approve payment
+    payment.paymentStatus = 'paid'
+    payment.paidAt        = new Date()
+    if (notes) payment.notes = notes
+    await payment.save()
+
+    // Confirm the linked order
+    const order = await Order.findById(payment.order)
+    if (order) {
+      order.paymentStatus = 'paid'
+      if (['pending'].includes(order.orderStatus)) {
+        order.orderStatus = 'confirmed'
+        order.statusHistory.push({
+          status:    'confirmed',
+          note:      `Payment approved by admin. ${notes || ''}`.trim(),
+          updatedBy: req.user._id,
+        })
+      }
+      await order.save()
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Payment approved for ${payment.user?.name || 'customer'}`,
+      payment,
+    })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
+// @desc    Admin reject payment (mark as failed)
+// @route   POST /api/payments/:id/reject
+// @access  Private/Admin
+export const rejectPayment = async (req, res) => {
+  try {
+    const { id }   = req.params
+    const { notes } = req.body
+
+    const payment = await Payment.findById(id).populate('user', 'name email')
+    if (!payment) {
+      return res.status(404).json({ success: false, message: 'Payment not found' })
+    }
+
+    if (payment.paymentStatus === 'paid') {
+      return res.status(400).json({ success: false, message: 'Cannot reject an already approved payment' })
+    }
+
+    payment.paymentStatus = 'failed'
+    payment.failedAt      = new Date()
+    if (notes) payment.notes = notes
+    await payment.save()
+
+    // Update order payment status
+    await Order.findByIdAndUpdate(payment.order, { paymentStatus: 'failed' })
+
+    res.status(200).json({
+      success: true,
+      message: `Payment rejected for ${payment.user?.name || 'customer'}`,
+      payment,
+    })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
+
 // @access  Private
 export const getPaymentHistory = async (req, res) => {
   try {
