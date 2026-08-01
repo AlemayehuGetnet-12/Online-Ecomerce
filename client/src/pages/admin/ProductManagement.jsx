@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import AdminLayout from '../../components/admin/AdminLayout'
 import Loader from '../../components/common/Loader'
@@ -12,6 +13,7 @@ const ProductManagement = () => {
   const { t } = useTranslation()
   const [products,   setProducts]   = useState([])
   const [categories, setCategories] = useState([])
+  const [catLoading, setCatLoading] = useState(true)
   const [loading,    setLoading]    = useState(true)
   const [showModal,  setShowModal]  = useState(false)
   const [editItem,   setEditItem]   = useState(null)
@@ -20,7 +22,22 @@ const ProductManagement = () => {
   const [search,     setSearch]     = useState('')
   const [page,       setPage]       = useState(1)
   const [total,      setTotal]      = useState(0)
+  const [errors,     setErrors]     = useState({})
   const limit = 15
+
+  const loadCategories = async () => {
+    setCatLoading(true)
+    try {
+      // fetch ALL categories (active + inactive) so admin can always pick one
+      const { data } = await categoryAPI.getAll()
+      setCategories(data.categories || [])
+    } catch (err) {
+      console.error('Failed to load categories:', err)
+      toast.error('Failed to load categories. Please refresh.')
+    } finally {
+      setCatLoading(false)
+    }
+  }
 
   const load = async (pg=1, q='') => {
     setLoading(true)
@@ -33,12 +50,35 @@ const ProductManagement = () => {
     finally { setLoading(false) }
   }
 
-  useEffect(() => { load(); categoryAPI.getAll().then(r => setCategories(r.data.categories || [])) }, [])
+  useEffect(() => {
+    load()
+    loadCategories()
+  }, [])
 
-  const openAdd  = () => { setForm(emptyForm); setEditItem(null); setShowModal(true) }
+  const openAdd  = () => {
+    setForm(emptyForm)
+    setEditItem(null)
+    setErrors({})
+    if (categories.length === 0) loadCategories()
+    setShowModal(true)
+  }
+
   const openEdit = (p) => {
-    setForm({ name: p.name, description: p.description, price: p.price, discount: p.discount, category: p.category?._id || '', brand: p.brand || '', stock: p.stock, isFeatured: p.isFeatured, isActive: p.isActive, images: p.images || [] })
-    setEditItem(p); setShowModal(true)
+    setForm({
+      name:        p.name,
+      description: p.description,
+      price:       p.price,
+      discount:    p.discount,
+      category:    p.category?._id || '',
+      brand:       p.brand || '',
+      stock:       p.stock,
+      isFeatured:  p.isFeatured,
+      isActive:    p.isActive,
+      images:      p.images || [],
+    })
+    setErrors({})
+    setEditItem(p)
+    setShowModal(true)
   }
 
   const handleImageAdd = (e) => {
@@ -52,10 +92,32 @@ const ProductManagement = () => {
 
   const handleSave = async e => {
     e.preventDefault()
-    if (!form.name || !form.price || !form.category) { toast.error('Name, price and category are required'); return }
+
+    // Validate each field individually and show which ones are missing
+    const newErrors = {}
+    if (!form.name.trim())     newErrors.name     = 'Product name is required'
+    if (!form.price)           newErrors.price    = 'Price is required'
+    if (Number(form.price) <= 0) newErrors.price  = 'Price must be greater than 0'
+    if (!form.category)        newErrors.category = 'Please select a category'
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      toast.error('Please fix the errors below')
+      return
+    }
+
+    setErrors({})
     setSaving(true)
     try {
-      const payload = { ...form, images: form.images.map(img => typeof img === 'string' ? img : img.url || img) }
+      const payload = {
+        ...form,
+        price:    Number(form.price),
+        discount: Number(form.discount || 0),
+        stock:    Number(form.stock   || 0),
+        images:   form.images.map(img =>
+          typeof img === 'string' ? img : img.url || img
+        ),
+      }
       if (editItem) {
         await productAPI.update(editItem._id, payload)
         toast.success(t('admin.updateSuccess'))
@@ -63,8 +125,11 @@ const ProductManagement = () => {
         await productAPI.create(payload)
         toast.success(t('admin.createSuccess'))
       }
-      setShowModal(false); load(page, search)
-    } catch (err) { toast.error(err.response?.data?.message || 'Error saving') }
+      setShowModal(false)
+      load(page, search)
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error saving product')
+    }
     setSaving(false)
   }
 
@@ -143,37 +208,120 @@ const ProductManagement = () => {
             </div>
             <form onSubmit={handleSave} className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {/* Name */}
                 <div className="sm:col-span-2">
-                  <label className="label">{t('admin.productName')} *</label>
-                  <input className="input" value={form.name} onChange={e => setForm(f=>({...f,name:e.target.value}))} />
+                  <label className="label">{t('admin.productName')} <span className="text-red-500">*</span></label>
+                  <input
+                    className={`input ${errors.name ? 'input-error' : ''}`}
+                    placeholder="e.g. Samsung Galaxy A55"
+                    value={form.name}
+                    onChange={e => { setForm(f=>({...f,name:e.target.value})); setErrors(er=>({...er,name:''})) }}
+                  />
+                  {errors.name && <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {errors.name}</p>}
                 </div>
+
+                {/* Description */}
                 <div className="sm:col-span-2">
                   <label className="label">{t('admin.productDescription')}</label>
-                  <textarea className="textarea" rows={3} value={form.description} onChange={e => setForm(f=>({...f,description:e.target.value}))} />
+                  <textarea
+                    className="textarea"
+                    rows={3}
+                    placeholder="Describe the product..."
+                    value={form.description}
+                    onChange={e => setForm(f=>({...f,description:e.target.value}))}
+                  />
                 </div>
+
+                {/* Price */}
                 <div>
-                  <label className="label">{t('admin.productPrice')} (ETB) *</label>
-                  <input className="input" type="number" min="0" step="0.01" value={form.price} onChange={e => setForm(f=>({...f,price:e.target.value}))} />
+                  <label className="label">{t('admin.productPrice')} (ETB) <span className="text-red-500">*</span></label>
+                  <input
+                    className={`input ${errors.price ? 'input-error' : ''}`}
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={form.price}
+                    onChange={e => { setForm(f=>({...f,price:e.target.value})); setErrors(er=>({...er,price:''})) }}
+                  />
+                  {errors.price && <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {errors.price}</p>}
                 </div>
+
+                {/* Discount */}
                 <div>
                   <label className="label">{t('admin.productDiscount')}</label>
-                  <input className="input" type="number" min="0" max="100" value={form.discount} onChange={e => setForm(f=>({...f,discount:e.target.value}))} />
+                  <input
+                    className="input"
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="0"
+                    value={form.discount}
+                    onChange={e => setForm(f=>({...f,discount:e.target.value}))}
+                  />
                 </div>
+
+                {/* Category */}
                 <div>
-                  <label className="label">{t('admin.productCategory')} *</label>
-                  <select className="select" value={form.category} onChange={e => setForm(f=>({...f,category:e.target.value}))}>
-                    <option value="">-- Select --</option>
-                    {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-                  </select>
+                  <label className="label">{t('admin.productCategory')} <span className="text-red-500">*</span></label>
+                  {catLoading ? (
+                    <div className="input flex items-center gap-2 text-gray-400 text-sm">
+                      <span className="spinner w-4 h-4 border-2" /> Loading categories...
+                    </div>
+                  ) : categories.length === 0 ? (
+                    <div className="space-y-2">
+                      <div className="input text-red-400 text-sm flex items-center gap-2">
+                        ⚠ No categories found
+                      </div>
+                      <button
+                        type="button"
+                        onClick={loadCategories}
+                        className="btn btn-secondary text-xs py-1.5 px-3 gap-1"
+                      >
+                        🔄 Retry loading categories
+                      </button>
+                    </div>
+                  ) : (
+                    <select
+                      className={`select ${errors.category ? 'input-error' : ''}`}
+                      value={form.category}
+                      onChange={e => { setForm(f=>({...f,category:e.target.value})); setErrors(er=>({...er,category:''})) }}
+                    >
+                      <option value="">-- Select Category --</option>
+                      {categories.map(c => (
+                        <option key={c._id} value={c._id}>{c.name}</option>
+                      ))}
+                    </select>
+                  )}
+                  {errors.category && <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {errors.category}</p>}
                 </div>
+
+                {/* Brand */}
                 <div>
                   <label className="label">{t('admin.productBrand')}</label>
-                  <input className="input" value={form.brand} onChange={e => setForm(f=>({...f,brand:e.target.value}))} />
+                  <input
+                    className="input"
+                    placeholder="e.g. Samsung"
+                    value={form.brand}
+                    onChange={e => setForm(f=>({...f,brand:e.target.value}))}
+                  />
                 </div>
+
+                {/* Stock */}
                 <div>
                   <label className="label">{t('admin.productStock')}</label>
-                  <input className="input" type="number" min="0" value={form.stock} onChange={e => setForm(f=>({...f,stock:e.target.value}))} />
+                  <input
+                    className="input"
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    value={form.stock}
+                    onChange={e => setForm(f=>({...f,stock:e.target.value}))}
+                  />
                 </div>
+
+                {/* Checkboxes */}
                 <div className="flex items-center gap-6 pt-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" className="w-4 h-4 accent-orange-600" checked={form.isFeatured} onChange={e => setForm(f=>({...f,isFeatured:e.target.checked}))} />
@@ -184,29 +332,60 @@ const ProductManagement = () => {
                     <span className="text-sm text-gray-700 dark:text-[#e2e8f0]">{t('admin.active')}</span>
                   </label>
                 </div>
+
+                {/* Images */}
                 <div className="sm:col-span-2">
                   <label className="label">{t('admin.productImages')}</label>
                   <label className="flex items-center gap-3 border-2 border-dashed border-gray-300 dark:border-[#334155] rounded-xl p-4 cursor-pointer hover:border-[#ea580c] transition-colors">
-                    <MdImage className="text-3xl text-gray-400" />
-                    <span className="text-sm text-gray-500 dark:text-[#94a3b8]">{t('admin.uploadImages')} (click to browse)</span>
+                    <MdImage className="text-3xl text-gray-400 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-[#94a3b8] font-medium">{t('admin.uploadImages')}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, JPEG — multiple allowed</p>
+                    </div>
                     <input type="file" multiple accept="image/*" className="sr-only" onChange={handleImageAdd} />
                   </label>
                   {form.images.length > 0 && (
                     <div className="flex gap-2 mt-3 flex-wrap">
                       {form.images.map((img, i) => (
-                        <div key={i} className="relative">
-                          <img src={typeof img === 'string' ? img : img.url || img} alt="" className="w-16 h-16 object-cover rounded-lg border" />
-                          <button type="button" onClick={() => setForm(f=>({...f,images:f.images.filter((_,j)=>j!==i)}))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">×</button>
+                        <div key={i} className="relative group">
+                          <img
+                            src={typeof img === 'string' ? img : img.url || img}
+                            alt=""
+                            className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-[#334155]"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setForm(f=>({...f,images:f.images.filter((_,j)=>j!==i)}))}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow hover:bg-red-600"
+                          >
+                            ×
+                          </button>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
+
               </div>
+
+              {/* Summary of errors */}
+              {Object.keys(errors).filter(k => errors[k]).length > 0 && (
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400">
+                  <p className="font-semibold mb-1">Please fix the following:</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    {Object.values(errors).filter(Boolean).map((e, i) => <li key={i}>{e}</li>)}
+                  </ul>
+                </div>
+              )}
+
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">{t('common.cancel')}</button>
-                <button type="submit" disabled={saving} className="btn btn-primary">
-                  {saving ? <span className="spinner" /> : t('common.save')}
+                <button
+                  type="submit"
+                  disabled={saving || catLoading || categories.length === 0}
+                  className="btn btn-primary px-8"
+                >
+                  {saving ? <><span className="spinner" /> Saving...</> : t('common.save')}
                 </button>
               </div>
             </form>
