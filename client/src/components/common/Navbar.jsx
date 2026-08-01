@@ -156,7 +156,127 @@ const MobileCategoryList = ({ onClose }) => {
   )
 }
 
-/* ─── Main Navbar ────────────────────────────────────────── */
+/* ─── Smart Search Bar ───────────────────────────────────── */
+const SearchBar = ({ onSearch, className = '' }) => {
+  const { t }        = useTranslation()
+  const navigate     = useNavigate()
+  const [query,      setQuery]      = useState('')
+  const [open,       setOpen]       = useState(false)
+  const [results,    setResults]    = useState([])
+  const [searching,  setSearching]  = useState(false)
+  const ref = useRef(null)
+  const debounceRef = useRef(null)
+
+  // Close on outside click
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [])
+
+  // Live suggestions while typing
+  const handleChange = (e) => {
+    const val = e.target.value
+    setQuery(val)
+    clearTimeout(debounceRef.current)
+    if (val.trim().length < 2) { setResults([]); setOpen(false); return }
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(val)}&limit=5`)
+        const data = await res.json()
+        setResults(data.products || [])
+        setOpen(true)
+      } catch { setResults([]) }
+      setSearching(false)
+    }, 300)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!query.trim()) return
+    setOpen(false)
+    if (onSearch) onSearch()
+    navigate(`/products?search=${encodeURIComponent(query.trim())}`)
+    setQuery('')
+  }
+
+  const selectResult = (product) => {
+    setOpen(false); setQuery('')
+    if (onSearch) onSearch()
+    navigate(`/products/${product._id}`)
+  }
+
+  return (
+    <div className={`relative ${className}`} ref={ref}>
+      <form onSubmit={handleSubmit} className="flex items-stretch w-full">
+        {/* input — no icon inside, button is on the right */}
+        <input
+          type="text"
+          value={query}
+          onChange={handleChange}
+          onFocus={() => results.length > 0 && setOpen(true)}
+          placeholder="Search products..."
+          className="flex-1 min-w-0 px-4 py-2 text-sm border-0 outline-none"
+          style={{
+            background: 'rgba(255,255,255,0.88)',
+            color: '#1f2937',
+            borderRadius: '0.75rem 0 0 0.75rem',
+          }}
+          autoComplete="off"
+        />
+        {/* orange search button — only ONE */}
+        <button
+          type="submit"
+          className="flex items-center gap-1.5 px-5 py-2 text-white text-sm font-semibold flex-shrink-0 transition-all hover:opacity-90 active:scale-95"
+          style={{
+            background: 'linear-gradient(135deg,#ea580c,#c2410c)',
+            borderRadius: '0 0.75rem 0.75rem 0',
+          }}
+        >
+          {searching
+            ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            : <MdSearch className="text-xl" />
+          }
+          <span className="hidden sm:inline font-semibold">Search</span>
+        </button>
+      </form>
+
+      {/* Dropdown suggestions */}
+      {open && results.length > 0 && (
+        <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-[#334155] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] z-50 overflow-hidden animate-fade-in">
+          {results.map(p => {
+            const price = p.discountedPrice ?? p.price
+            return (
+              <button
+                key={p._id}
+                onClick={() => selectResult(p)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-orange-50 dark:hover:bg-[#334155] transition-colors text-left"
+              >
+                <img
+                  src={p.images?.[0]?.url || 'https://placehold.co/40x40?text=?'}
+                  alt={p.name}
+                  className="w-9 h-9 object-cover rounded-lg flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-800 dark:text-[#e2e8f0] truncate">{p.name}</p>
+                  <p className="text-xs text-gray-400 dark:text-[#94a3b8]">{p.category?.name}</p>
+                </div>
+                <span className="text-sm font-bold text-[#ea580c] flex-shrink-0">{price?.toFixed(0)} ETB</span>
+              </button>
+            )
+          })}
+          <button
+            onClick={handleSubmit}
+            className="w-full px-4 py-2.5 text-center text-xs font-semibold text-[#ea580c] border-t border-gray-100 dark:border-[#334155] hover:bg-orange-50 dark:hover:bg-[#334155] transition-colors"
+          >
+            {t('common.seeAll')} results for "{query}" →
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
 const Navbar = () => {
   const { t } = useTranslation()
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
@@ -164,17 +284,6 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery)}`)
-      setSearchQuery('')
-      setMobileMenuOpen(false)
-    }
-  }
-
   const handleLogout = () => { logout(); navigate('/'); setMobileMenuOpen(false) }
   const closeMobile = () => setMobileMenuOpen(false)
 
@@ -232,21 +341,10 @@ const Navbar = () => {
             <span className="hidden sm:block text-xl font-bold nav-text">Alex Store</span>
           </Link>
 
-          {/* Desktop Search */}
-          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl">
-            <div className="relative w-full">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder={t('common.search')}
-                className="input pr-10 text-sm"
-              />
-              <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#ea580c]">
-                <MdSearch className="text-xl" />
-              </button>
-            </div>
-          </form>
+          {/* Desktop Search — full styled bar with button + suggestions */}
+          <div className="hidden md:flex flex-1 max-w-2xl">
+            <SearchBar className="w-full" />
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-2">
@@ -315,8 +413,8 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile: cart + burger */}
-          <div className="md:hidden flex items-center gap-2">
+          {/* Mobile: search icon + cart + burger */}
+          <div className="md:hidden flex items-center gap-1.5">
             {isAuthenticated && (
               <Link to="/cart" className="relative w-9 h-9 flex items-center justify-center">
                 <MdShoppingCart className="text-xl nav-text" />
@@ -341,21 +439,10 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t animate-slide-down space-y-1 mobile-menu-bg">
-            {/* Mobile search */}
-            <form onSubmit={handleSearch} className="mb-3">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={t('common.search')}
-                  className="input pr-10 text-sm"
-                />
-                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2">
-                  <MdSearch className="text-xl text-gray-500" />
-                </button>
-              </div>
-            </form>
+            {/* Mobile search — full bar with button */}
+            <div className="mb-3">
+              <SearchBar onSearch={closeMobile} className="w-full" />
+            </div>
 
             {/* Nav links */}
             {[
