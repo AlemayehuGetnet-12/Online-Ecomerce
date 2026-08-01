@@ -4,6 +4,7 @@ import { AuthProvider }    from './context/AuthContext'
 import { CartProvider }    from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
 import ProtectedRoute      from './components/common/ProtectedRoute'
+import MobileBottomNav    from './components/common/MobileBottomNav'
 
 // ── Customer Pages ────────────────────────────────────────────
 import Home          from './pages/customer/Home'
@@ -38,8 +39,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
-            <Routes>
-              {/* Public */}
+            <Routes>              {/* Public */}
               <Route path="/"            element={<Home />} />
               <Route path="/products"    element={<Products />} />
               <Route path="/products/:id" element={<ProductDetails />} />
@@ -70,6 +70,8 @@ function App() {
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            {/* Mobile bottom navigation — visible only on phones */}
+            <MobileBottomNav />
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>

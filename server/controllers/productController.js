@@ -22,9 +22,15 @@ export const getProducts = async (req, res) => {
 
     const filter = { isActive: true }
 
-    // Full-text search
+    // Search — use regex on name, brand, description (works without text index)
     if (search) {
-      filter.$text = { $search: search }
+      const rx = { $regex: search, $options: 'i' }
+      filter.$or = [
+        { name:        rx },
+        { brand:       rx },
+        { description: rx },
+        { tags:        rx },
+      ]
     }
 
     // Category filter
@@ -408,7 +414,10 @@ export const getAllProductsAdmin = async (req, res) => {
     const { page = 1, limit = 20, search, category, sort = '-createdAt' } = req.query
 
     const filter = {}
-    if (search)   filter.$text    = { $search: search }
+    if (search) {
+      const rx = { $regex: search, $options: 'i' }
+      filter.$or = [{ name: rx }, { brand: rx }, { description: rx }]
+    }
     if (category) filter.category = category
 
     const sortMap = {

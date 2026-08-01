@@ -115,7 +115,7 @@ async function main () {
   // ── Products ─────────────────────────────────────────────
   console.log('\n📦 Creating products...')
   const products = [
-    // Electronics (6)
+    // ffElectronics (6)
     { name: 'Samsung Galaxy A55 5G',       price: 45000,  discount: 10, category: C['Electronics'], brand: 'Samsung',      stock: 25,  isFeatured: true,  soldCount: 120, rating: 4.5, reviewCount: 48,  tags: ['phone','samsung'],    images: [{ url: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&q=80', publicId: '' }], description: 'Samsung Galaxy A55 5G with 50MP triple camera, 5000mAh battery and 6.6-inch Super AMOLED display.' },
     { name: 'iPhone 15 128GB',              price: 120000, discount: 5,  category: C['Electronics'], brand: 'Apple',        stock: 15,  isFeatured: true,  soldCount: 200, rating: 4.8, reviewCount: 95,  tags: ['iphone','apple'],      images: [{ url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&q=80', publicId: '' }], description: 'Apple iPhone 15 with A16 Bionic chip, 48MP camera system, Dynamic Island and USB-C.' },
     { name: 'Sony WH-1000XM5 Headphones',  price: 9500,   discount: 20, category: C['Electronics'], brand: 'Sony',         stock: 40,  isFeatured: true,  soldCount: 85,  rating: 4.3, reviewCount: 32,  tags: ['headphones','sony'],   images: [{ url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80', publicId: '' }], description: 'Premium noise-cancelling wireless headphones with 30-hour battery life and LDAC support.' },
