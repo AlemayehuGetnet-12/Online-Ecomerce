@@ -80,7 +80,7 @@ const ProductCard = ({ product }) => {
             className="btn btn-primary w-full text-xs py-2"
           >
             <MdShoppingCart className="text-sm" />
-            {inCart ? 'In Cart' : t('products.addToCart')}
+            {inCart ? t('products.inCart') : t('products.addToCart')}
           </button>
         </div>
       </div>

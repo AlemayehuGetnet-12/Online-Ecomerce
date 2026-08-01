@@ -92,7 +92,14 @@
     "newsletter": "ናብ ኒውስሌተር ተመዝገብ",
     "newsletterDesc": "ሓድሽ ሓበሬታታትን ቅናሻትን ተቐበል",
     "emailPlaceholder": "ኢመይልካ ኣእትው",
-    "subscribe": "ተመዝገብ"
+    "subscribe": "ተመዝገብ",
+    "slides": {
+      "electronics": { "title": "ሓድሽ ኤሌክትሮኒክስ ግዛእ", "subtitle": "ተሌፎን፣ ላፕቶፕ፣ ስማርትዎች", "cta": "ኤሌክትሮኒክስ ግዛእ", "badge": "ክሳብ 20% ቅናሽ" },
+      "fashion":     { "title": "ሓድሽ ፋሽን ፍርያት", "subtitle": "ሓድሽ ዝርዝር ክዳን ኣርኢ", "cta": "ፋሽን ኣርኢ", "badge": "ሓድሽ ስብስብ" },
+      "home":        { "title": "ቤትካ ቀይር", "subtitle": "ምሩጽ ዕቃ ቤትን ዲኮርን", "cta": "ዕቃ ቤት ግዛእ", "badge": "ዝበለጸ ቅናሽ" },
+      "beauty":      { "title": "ጽባቐን ክንክንን", "subtitle": "ምሩጽ ፍርያት ቆርበትን ጽባቐን", "cta": "ፍርያት ጽባቐ ግዛእ", "badge": "ላዕለዋይ ደረጃ" },
+      "coffee":      { "title": "ናይ ኢትዮጵያ ቡን", "subtitle": "ዝተረጋገጸ ዪርጋቸፌን ሲዳሞን", "cta": "ቡን ኣዝዝ", "badge": "ዝበዝሕ ዝሽየጥ" }
+    }
   },
   "products": {
     "title": "ኩሎም ፍርያት",
@@ -103,6 +110,9 @@
     "category": "ምድብ",
     "brand": "ብራንድ",
     "rating": "ደረጃ",
+    "allCategories": "ኩሎም ምድባት",
+    "inCart": "ኣብ ዐረባ",
+    "productsFound": "{{count}} ፍርያት ተረኺቡ",
     "inStock": "ኣሎ",
     "outOfStock": "ወዲኡ",
     "lowStock": "ውሑድ ተሪፉ",
@@ -149,7 +159,9 @@
     "itemRemoved": "ኣቕሓ ካብ ዐረባ ወጺኡ",
     "freeShipping": "ነጻ መጐዓዝያ ካብ 500 ብር ንላዕሊ",
     "itemsInCart": "{{count}} ኣቕሓ ኣብ ዐረባ",
-    "itemsInCart_plural": "{{count}} ኣቕሓታት ኣብ ዐረባ"
+    "itemsInCart_plural": "{{count}} ኣቕሓታት ኣብ ዐረባ",
+    "startShopping": "ኣቕሓ ናብ ዐረባ ወስኽ",
+    "free": "ነጻ"
   },
   "wishlist": {
     "title": "ድሌተይ",
@@ -280,6 +292,7 @@
     "dailySales": "መዓልታዊ ዕዳጋ",
     "weeklySales": "ሰሙናዊ ዕዳጋ",
     "monthlySales": "ወርሓዊ ዕዳጋ",
+    "monthlyOrders": "ወርሓዊ ትእዛዛት",
     "yearlySales": "ዓመታዊ ዕዳጋ",
     "addProduct": "ፍርያት ወስኽ",
     "editProduct": "ፍርያት ኣርም",

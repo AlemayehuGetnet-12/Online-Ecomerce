@@ -70,7 +70,7 @@ const Products = () => {
             onClick={() => setFilter('category', '')}
             className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${!filters.category ? 'bg-orange-50 text-[#ea580c] font-medium dark:bg-[#334155]' : 'hover:bg-gray-100 dark:hover:bg-[#334155] text-gray-600 dark:text-[#94a3b8]'}`}
           >
-            All Categories
+            {t('products.allCategories')}
           </button>
           {categories.map(cat => (
             <button
@@ -157,7 +157,7 @@ const Products = () => {
 
           {/* Products grid */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-gray-500 dark:text-[#94a3b8] mb-4">{total} products found</p>
+            <p className="text-sm text-gray-500 dark:text-[#94a3b8] mb-4">{t('products.productsFound', { count: total })}</p>
             {loading ? (
               <div className="flex justify-center py-20"><Loader size="xl" /></div>
             ) : products.length === 0 ? (

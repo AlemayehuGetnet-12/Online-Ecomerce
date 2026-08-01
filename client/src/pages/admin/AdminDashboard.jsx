@@ -64,10 +64,13 @@ const AdminDashboard = () => {
           <h2 className="font-bold text-gray-900 dark:text-[#e2e8f0] mb-4">{t('admin.monthlySales')}</h2>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={sales} margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={v => [`${v.toFixed(2)} ETB`]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid, #e5e7eb)" />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--chart-text, #6b7280)' }} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--chart-text, #6b7280)' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--chart-tooltip-bg, #fff)', border: '1px solid var(--chart-tooltip-border, #e5e7eb)', borderRadius: 8, color: 'var(--chart-tooltip-color, #111827)' }}
+                formatter={v => [`${v.toFixed(2)} ETB`]}
+              />
               <Bar dataKey="sales" fill="#ea580c" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -75,13 +78,15 @@ const AdminDashboard = () => {
 
         {/* Orders chart */}
         <div className="card p-6">
-          <h2 className="font-bold text-gray-900 dark:text-[#e2e8f0] mb-4">Monthly Orders</h2>
+          <h2 className="font-bold text-gray-900 dark:text-[#e2e8f0] mb-4">{t('admin.monthlyOrders')}</h2>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={sales} margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid, #e5e7eb)" />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--chart-text, #6b7280)' }} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--chart-text, #6b7280)' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--chart-tooltip-bg, #fff)', border: '1px solid var(--chart-tooltip-border, #e5e7eb)', borderRadius: 8, color: 'var(--chart-tooltip-color, #111827)' }}
+              />
               <Line type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6', r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
@@ -92,7 +97,7 @@ const AdminDashboard = () => {
       <div className="card overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-[#334155] flex justify-between items-center">
           <h2 className="font-bold text-gray-900 dark:text-[#e2e8f0]">{t('admin.recentOrders')}</h2>
-          <Link to="/admin/orders" className="text-sm text-[#ea580c] hover:underline">View All</Link>
+          <Link to="/admin/orders" className="text-sm text-[#ea580c] hover:underline">{t('common.seeAll')}</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -121,7 +126,7 @@ const AdminDashboard = () => {
                 </tr>
               ))}
               {!data?.recentOrders?.length && (
-                <tr><td colSpan={6} className="text-center py-8 text-gray-400">No orders yet</td></tr>
+                <tr><td colSpan={6} className="text-center py-8 text-gray-400 dark:text-[#94a3b8]">{t('orders.noOrders')}</td></tr>
               )}
             </tbody>
           </table>

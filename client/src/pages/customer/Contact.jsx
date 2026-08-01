@@ -48,17 +48,17 @@ const Contact = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-[#0f172a]">
+    <div className="flex flex-col min-h-screen bg-sky-600 dark:bg-[#0f172a]">
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#ea580c] to-[#9a3412] py-16">
+      <section className="bg-gradient-to-br from-[rgb(73,97,163)] to-[#369736] py-16  dark:bg-[#0f172a] ">
         <div className="container-custom text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="inline-block bg-white/20 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-4">
               Get In Touch
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Contact Us</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-blue-800 mb-4">Contact Us</h1>
             <p className="text-orange-100 text-lg max-w-xl mx-auto">
               Have a question, suggestion, or need help? We'd love to hear from you.
               Reach us any time through the channels below.
@@ -75,7 +75,7 @@ const Contact = () => {
             <motion.h2
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-xl font-bold text-gray-900 dark:text-[#e2e8f0] mb-6"
+              className="text-xl font-bold text-gray-900 dark:text-[#20508f] mb-6"
             >
               Our Contact Details
             </motion.h2>
@@ -180,10 +180,10 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="label">Your Name <span className="text-red-500">*</span></label>
+                    <label className="label">full Name <span className="text-red-500">*</span></label>
                     <input
                       className="input"
-                      placeholder="Abebe Kebede"
+                      placeholder="your full name"
                       value={form.name}
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     />

@@ -92,7 +92,14 @@
     "newsletter": "Abonnez-vous à notre newsletter",
     "newsletterDesc": "Recevez les dernières mises à jour et offres",
     "emailPlaceholder": "Entrez votre e-mail",
-    "subscribe": "S'abonner"
+    "subscribe": "S'abonner",
+    "slides": {
+      "electronics": { "title": "Achetez les dernières électroniques", "subtitle": "Téléphones, ordinateurs, montres connectées et plus", "cta": "Acheter électroniques", "badge": "Jusqu'à 20% OFF" },
+      "fashion":     { "title": "Nouvelles tendances mode", "subtitle": "Découvrez les dernières tendances en vêtements", "cta": "Explorer la mode", "badge": "Nouvelle collection" },
+      "home":        { "title": "Transformez votre maison", "subtitle": "Meubles et décoration premium pour chaque pièce", "cta": "Acheter maison", "badge": "Meilleures offres" },
+      "beauty":      { "title": "Beauté et soins", "subtitle": "Produits de soin et beauté pour tous les types de peau", "cta": "Acheter beauté", "badge": "Mieux noté" },
+      "coffee":      { "title": "Café éthiopien premium", "subtitle": "Yirgacheffe et Sidamo authentiques — livrés frais", "cta": "Commander café", "badge": "Meilleure vente" }
+    }
   },
   "products": {
     "title": "Tous les produits",
@@ -103,6 +110,9 @@
     "category": "Catégorie",
     "brand": "Marque",
     "rating": "Évaluation",
+    "allCategories": "Toutes les catégories",
+    "inCart": "Dans le panier",
+    "productsFound": "{{count}} produits trouvés",
     "inStock": "En stock",
     "outOfStock": "Rupture de stock",
     "lowStock": "Stock faible",
@@ -149,7 +159,9 @@
     "itemRemoved": "Article retiré du panier",
     "freeShipping": "Livraison gratuite pour les commandes de plus de 500 ETB",
     "itemsInCart": "{{count}} article dans le panier",
-    "itemsInCart_plural": "{{count}} articles dans le panier"
+    "itemsInCart_plural": "{{count}} articles dans le panier",
+    "startShopping": "Commencez à ajouter des produits à votre panier",
+    "free": "GRATUIT"
   },
   "wishlist": {
     "title": "Ma liste de souhaits",
@@ -280,6 +292,7 @@
     "dailySales": "Ventes journalières",
     "weeklySales": "Ventes hebdomadaires",
     "monthlySales": "Ventes mensuelles",
+    "monthlyOrders": "Commandes mensuelles",
     "yearlySales": "Ventes annuelles",
     "addProduct": "Ajouter un produit",
     "editProduct": "Modifier le produit",

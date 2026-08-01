@@ -92,7 +92,14 @@
     "newsletter": "اشترك في النشرة الإخبارية",
     "newsletterDesc": "احصل على آخر التحديثات والعروض",
     "emailPlaceholder": "أدخل بريدك الإلكتروني",
-    "subscribe": "اشترك"
+    "subscribe": "اشترك",
+    "slides": {
+      "electronics": { "title": "تسوق أحدث الإلكترونيات", "subtitle": "هواتف، حواسيب، ساعات ذكية والمزيد", "cta": "تسوق الإلكترونيات", "badge": "خصم 20%" },
+      "fashion":     { "title": "أحدث صيحة الموضة", "subtitle": "اكتشف آخر صيحات الملابس والإكسسوارات", "cta": "استكشف الموضة", "badge": "مجموعة جديدة" },
+      "home":        { "title": "حول منزلك", "subtitle": "أثاث وديكور فاخر لكل غرفة", "cta": "تسوق المنزل", "badge": "أفضل العروض" },
+      "beauty":      { "title": "الجمال والعناية", "subtitle": "منتجات عناية بالبشرة والجمال", "cta": "تسوق الجمال", "badge": "الأعلى تقييماً" },
+      "coffee":      { "title": "قهوة إثيوبية فاخرة", "subtitle": "يرغاتشيفي وسيدامو — طازجة إلى بابك", "cta": "اطلب قهوة", "badge": "الأكثر مبيعاً" }
+    }
   },
   "products": {
     "title": "جميع المنتجات",
@@ -103,6 +110,9 @@
     "category": "الفئة",
     "brand": "العلامة التجارية",
     "rating": "التقييم",
+    "allCategories": "جميع الفئات",
+    "inCart": "في السلة",
+    "productsFound": "{{count}} منتجات وجدت",
     "inStock": "متوفر",
     "outOfStock": "نفذ",
     "lowStock": "مخزون منخفض",
@@ -149,7 +159,9 @@
     "itemRemoved": "تمت إزالة المنتج من السلة",
     "freeShipping": "شحن مجاني للطلبات فوق 500 بر",
     "itemsInCart": "{{count}} منتج في السلة",
-    "itemsInCart_plural": "{{count}} منتجات في السلة"
+    "itemsInCart_plural": "{{count}} منتجات في السلة",
+    "startShopping": "ابدأ بإضافة منتجات إلى سلتك",
+    "free": "مجاني"
   },
   "wishlist": {
     "title": "قائمة رغباتي",
@@ -280,6 +292,7 @@
     "dailySales": "المبيعات اليومية",
     "weeklySales": "المبيعات الأسبوعية",
     "monthlySales": "المبيعات الشهرية",
+    "monthlyOrders": "الطلبات الشهرية",
     "yearlySales": "المبيعات السنوية",
     "addProduct": "إضافة منتج",
     "editProduct": "تعديل منتج",

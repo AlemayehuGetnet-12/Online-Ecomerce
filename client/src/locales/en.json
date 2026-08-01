@@ -92,7 +92,14 @@
     "newsletter": "Subscribe to Our Newsletter",
     "newsletterDesc": "Get the latest updates and offers",
     "emailPlaceholder": "Enter your email",
-    "subscribe": "Subscribe"
+    "subscribe": "Subscribe",
+    "slides": {
+      "electronics": { "title": "Shop the Latest Electronics", "subtitle": "Phones, laptops, smartwatches and more — all in one place", "cta": "Shop Electronics", "badge": "Up to 20% OFF" },
+      "fashion":     { "title": "Fresh Fashion Arrivals", "subtitle": "Discover the latest trends in clothing and accessories", "cta": "Explore Fashion", "badge": "New Collection" },
+      "home":        { "title": "Transform Your Home", "subtitle": "Premium furniture and decor for every room", "cta": "Shop Home & Living", "badge": "Best Deals" },
+      "beauty":      { "title": "Beauty & Self-Care", "subtitle": "Premium skincare and beauty products for every skin type", "cta": "Shop Beauty", "badge": "Top Rated" },
+      "coffee":      { "title": "Ethiopian Premium Coffee", "subtitle": "Authentic Yirgacheffe and Sidamo — shipped fresh to your door", "cta": "Order Coffee", "badge": "Best Seller" }
+    }
   },
   "products": {
     "title": "All Products",
@@ -103,6 +110,9 @@
     "category": "Category",
     "brand": "Brand",
     "rating": "Rating",
+    "allCategories": "All Categories",
+    "inCart": "In Cart",
+    "productsFound": "{{count}} products found",
     "inStock": "In Stock",
     "outOfStock": "Out of Stock",
     "lowStock": "Low Stock",
@@ -149,7 +159,9 @@
     "itemRemoved": "Item removed from cart",
     "freeShipping": "Free shipping on orders over 500 ETB",
     "itemsInCart": "{{count}} item in cart",
-    "itemsInCart_plural": "{{count}} items in cart"
+    "itemsInCart_plural": "{{count}} items in cart",
+    "startShopping": "Start adding products to your cart",
+    "free": "FREE"
   },
   "wishlist": {
     "title": "My Wishlist",
@@ -281,6 +293,7 @@
     "weeklySales": "Weekly Sales",
     "monthlySales": "Monthly Sales",
     "yearlySales": "Yearly Sales",
+    "monthlyOrders": "Monthly Orders",
     "addProduct": "Add Product",
     "editProduct": "Edit Product",
     "deleteProduct": "Delete Product",

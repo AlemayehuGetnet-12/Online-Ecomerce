@@ -58,13 +58,23 @@ body {
   background: #ffffff;
   color: #111827;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dark body,
 .dark {
   background: #0f172a;
   color: #e2e8f0;
+}
+
+/* Ensure every page wrapper respects dark mode */
+.dark * {
+  border-color: inherit;
+}
+
+/* Smooth theme transitions on all elements */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
 }
 
 html[dir="rtl"] body { font-family: var(--font-arabic); }
@@ -220,6 +230,41 @@ html[dir="rtl"] body { font-family: var(--font-arabic); }
 .animate-fade-in  { animation: var(--animate-fade-in); }
 .animate-slide-up { animation: var(--animate-slide-up); }
 .animate-slide-down { animation: var(--animate-slide-down); }
+
+/* Recharts dark mode */
+.dark .recharts-cartesian-grid-horizontal line,
+.dark .recharts-cartesian-grid-vertical line { stroke: #334155; }
+.dark .recharts-text { fill: #94a3b8; }
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Chart CSS variables for dark/light */
+:root {
+  --chart-grid: #e5e7eb;
+  --chart-text: #6b7280;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #e5e7eb;
+  --chart-tooltip-color: #111827;
+}
+.dark {
+  --chart-grid: #334155;
+  --chart-text: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-tooltip-border: #334155;
+  --chart-tooltip-color: #e2e8f0;
+}
+
+/* Select dark mode */
+.dark select option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Table dark mode */
+.dark table { color: #e2e8f0; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
