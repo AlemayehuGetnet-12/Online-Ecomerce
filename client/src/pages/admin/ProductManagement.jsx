@@ -28,12 +28,20 @@ const ProductManagement = () => {
   const loadCategories = async () => {
     setCatLoading(true)
     try {
-      // fetch ALL categories (active + inactive) so admin can always pick one
+      // no filter — fetch ALL categories so admin always sees them
       const { data } = await categoryAPI.getAll()
-      setCategories(data.categories || [])
+      const cats = data.categories || []
+      if (cats.length === 0) {
+        // fallback: try with explicit no-filter
+        const r2 = await categoryAPI.getAll({ limit: 100 })
+        setCategories(r2.data.categories || [])
+      } else {
+        setCategories(cats)
+      }
     } catch (err) {
-      console.error('Failed to load categories:', err)
-      toast.error('Failed to load categories. Please refresh.')
+      console.error('Failed to load categories:', err.message)
+      setCategories([])
+      toast.error('Could not load categories — check your connection')
     } finally {
       setCatLoading(false)
     }
@@ -382,7 +390,7 @@ const ProductManagement = () => {
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">{t('common.cancel')}</button>
                 <button
                   type="submit"
-                  disabled={saving || catLoading || categories.length === 0}
+                  disabled={saving}
                   className="btn btn-primary px-8"
                 >
                   {saving ? <><span className="spinner" /> Saving...</> : t('common.save')}
