@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
 import {
@@ -31,14 +30,14 @@ const TabStory = () => (
       subtitle="How a simple idea grew into Ethiopia's most trusted online marketplace." />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
       <div className="space-y-5 text-gray-600 dark:text-[#94a3b8] leading-relaxed text-sm sm:text-base">
-        <p><strong className="text-gray-900 dark:text-[#e2e8f0]">Alex Store</strong> was founded in 2023 by{' '}
-          <strong className="text-[#ea580c]">Alemayehu Getnet</strong>, a software developer from Addis Ababa who noticed a gap — Ethiopian shoppers had no reliable, modern, multilingual online marketplace built for them.</p>
+        <p><strong className="text-orange-600 dark:text-[#20497e]">Alex Store</strong> was founded in 2026 by{' '}
+          <strong className="text-[#970944]">Alemayehu Getnet</strong>, a software developer from Addis Ababa who noticed a gap — Ethiopian shoppers had no reliable, modern, multilingual online marketplace built for them.</p>
         <p>The journey started small: a handful of product categories, a simple checkout, and a dream. Within months the platform expanded to support Telebirr and CBE Birr payments — removing the biggest barrier for shoppers without international bank cards.</p>
         <p>Today Alex Store serves thousands of customers across Ethiopia in <strong className="text-gray-900 dark:text-[#e2e8f0]">6 languages</strong>: English, Amharic, Afaan Oromo, Tigrinya, Arabic and French.</p>
         <p>What began as a one-person project has grown into a full-stack platform used by mobile users, product engineers and entrepreneurs who believe Ethiopia's digital future starts with accessible commerce.</p>
       </div>
       <div>
-        <div className="bg-gradient-to-br from-[#ea580c] to-[#9a3412] rounded-2xl p-7 text-white mb-4">
+        <div className="bg-gradient-to-br from-[#134861] to-[#251a16] rounded-2xl p-7 text-white mb-4">
           <h3 className="text-lg font-bold mb-5">Mission · Vision · Values</h3>
           {[
             { e:'🎯', t:'Mission', d:'Make online shopping easy, safe and accessible for every Ethiopian.' },
@@ -276,7 +275,7 @@ const TabDeveloper = () => (
 
 /* ── TABS CONFIG ─────────────────────────────────────────── */
 const TABS = [
-  { id:'story',     label:'📖 Our Story',      Component: TabStory     },
+  { id:'story',     label:'📖Our Story',      Component: TabStory     },
   { id:'brands',    label:'🏷️ Brands',          Component: TabBrands    },
   { id:'careers',   label:'💼 Careers',         Component: TabCareers   },
   { id:'press',     label:'📰 Press & Media',   Component: TabPress     },
@@ -285,7 +284,20 @@ const TABS = [
 
 /* ── MAIN PAGE ───────────────────────────────────────────── */
 const About = () => {
-  const [activeTab, setActiveTab] = useState('story')
+  const location = useLocation()
+  // /about → story, /about/brands → brands, etc.
+  const segment  = location.pathname.replace('/about', '').replace('/', '') || 'story'
+  const initTab  = TABS.find(t => t.id === segment) ? segment : 'story'
+
+  const [activeTab, setActiveTab] = useState(initTab)
+
+  // Keep tab in sync when URL changes via navbar links
+  useEffect(() => {
+    const seg = location.pathname.replace('/about', '').replace('/', '') || 'story'
+    const valid = TABS.find(t => t.id === seg) ? seg : 'story'
+    setActiveTab(valid)
+  }, [location.pathname])
+
   const ActiveComponent = TABS.find(t => t.id === activeTab)?.Component || TabStory
 
   return (
@@ -293,17 +305,18 @@ const About = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#ea580c] via-[#c2410c] to-[#9a3412] py-14 md:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#26ea0c] via-[#c2410c] to-[#4f0e7a] py-1 md:py-2">
         <div className="container-custom relative z-10">
-          <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }} className="max-w-2xl">
-            <span className="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4 uppercase tracking-widest">About Alex Store</span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight">Ethiopia's Trusted Online Marketplace</h1>
+          <motion.div initial={{ opacity:0, y:3 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }} className="max-w-2xl">
+            <span className="inline-block bg-white/20 text-white text-xs font-semibold px-1 py-1.5 rounded-full mb-4 uppercase tracking-widest">About Alex Store</span>
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight">
+              Ethiopia's Trusted Online Marketplace</h1>
             <p className="text-orange-100 text-base mb-6 leading-relaxed max-w-lg">
               Founded to make quality online shopping accessible, fast and safe for every Ethiopian.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link to="/products" className="btn bg-white text-[#ea580c] font-bold px-6 py-2.5">Shop Now</Link>
-              <Link to="/contact"  className="btn border-2 border-white/60 text-white hover:bg-white/10 px-6 py-2.5">Contact Us</Link>
+              <Link to="/contact"  className="btn   bg-white border-2 border-red-500/60 text-blue-700 hover:bg-white/10 px-6 py-2.5">Contact Us</Link>
             </div>
           </motion.div>
         </div>
@@ -338,14 +351,16 @@ const About = () => {
         <div className="container-custom overflow-x-auto scrollbar-hide">
           <div className="flex min-w-max">
             {TABS.map(({ id, label }) => (
-              <button key={id} onClick={() => setActiveTab(id)}
+              <Link
+                key={id}
+                to={id === 'story' ? '/about' : `/about/${id}`}
                 className={`px-5 py-3.5 text-sm font-semibold border-b-2 transition-all whitespace-nowrap ${
                   activeTab === id
                     ? 'border-[#ea580c] text-[#ea580c] bg-orange-50/50 dark:bg-[#1e293b]'
                     : 'border-transparent text-gray-500 dark:text-[#94a3b8] hover:text-[#ea580c] hover:border-orange-300'
                 }`}>
                 {label}
-              </button>
+              </Link>
             ))}
           </div>
         </div>

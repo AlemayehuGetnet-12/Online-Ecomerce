@@ -19,7 +19,7 @@ const MENUS = [
     label: 'Products',
     sections: [
       {
-        heading: 'All Products',
+        heading: 'All Products', to: '/products',
         items: [
           { label: 'All Products',  to: '/products',                       icon: '🛍️' },
           { label: 'Best Sellers',  to: '/products?sort=-soldCount',        icon: '🔥' },
@@ -39,11 +39,12 @@ const MENUS = [
       {
         heading: 'About Alex Store',
         items: [
-          { label: 'About Us',     to: '/about',          icon: '🏢' },
-          { label: 'Our Story',    to: '/about#story',    icon: '📖' },
-          { label: 'Careers',      to: '/about#careers',  icon: '💼' },
-          { label: 'Our Brands',   to: '/about#brands',   icon: '🏷️' },
-          { label: 'Press & Media',to: '/about',          icon: '📰' },
+          { label: 'About Us',      to: '/about',            icon: '🏢' },
+          { label: 'Our Story',     to: '/about/story',      icon: '📖' },
+          { label: 'Careers',       to: '/about/careers',    icon: '💼' },
+          { label: 'Our Brands',    to: '/about/brands',     icon: '🏷️' },
+          { label: 'Press & Media', to: '/about/press',      icon: '📰' },
+          { label: 'The Developer', to: '/about/developer',  icon: '👤' },
         ],
       },
     ],
@@ -52,13 +53,13 @@ const MENUS = [
     label: 'Customer Service',
     sections: [
       {
-        heading: 'Customer Service',
+        heading: 'Customer Service', to: '/contact',
         items: [
-          { label: 'Help Center',      to: '/contact',          icon: '❓' },
-          { label: 'Shipping Info',    to: '/contact#shipping', icon: '🚚' },
-          { label: 'Returns & Refunds',to: '/contact#returns',  icon: '↩️' },
-          { label: 'Contact Us',       to: '/contact',          icon: '💬' },
-          { label: 'Track My Order',   to: '/orders',           icon: '📦' },
+          { label: 'Help Center',      to: '/contact',   icon: '❓' },
+          { label: 'Shipping Info',    to: '/shipping', icon: '🚚' },
+          { label: 'Returns & Refunds',to: '/returns',  icon: '↩️' },
+          { label: 'Contact Us',       to: '/contact',  icon: '💬' },
+          { label: 'Track My Order',   to: '/orders',   icon: '📦' },
         ],
       },
     ],
@@ -67,14 +68,14 @@ const MENUS = [
     label: 'Shop',
     sections: [
       {
-        heading: 'Shop',
+        heading: 'Shop', to: '/products',
         items: [
-          { label: 'Best Sellers',  to: '/products?sort=-soldCount',  icon: '🔥' },
-          { label: 'New Arrivals',  to: '/products?sort=-createdAt',  icon: '✨' },
-          { label: 'Fashion',       to: '/products?category=fashion', icon: '👗' },
-          { label: 'Electronics',   to: '/products?category=electronics', icon: '📱' },
-          { label: 'On Sale',       to: '/products?discount=true',    icon: '🏷️' },
-          { label: 'Featured',      to: '/products?isFeatured=true',  icon: '⭐' },
+     { label: 'Best Sellers',  to: '/products?sort=-soldCount', icon: '🔥' },
+     { label: 'New Arrivals', to: '/products?sort=-createdAt',  icon: '✨' },
+    { label: 'Fashion',    to: '/products?category=fashion', icon: '👗' },
+   { label: 'Electronics', to: '/products?category=electronics', icon: '📱' },
+   { label: 'On Sale',  to: '/products?discount=true',    icon: '🏷️' },
+  { label: 'Featured',  to: '/products?isFeatured=true',  icon: '⭐' },
         ],
       },
     ],
@@ -108,10 +109,11 @@ const MegaDropdown = ({ menu, onClose }) => {
           style={{ minWidth: '200px' }}>
           <div className="bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-[#334155] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] overflow-hidden">
             {/* header strip */}
-            <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-white"
+            <Link to={menu.sections[0].to} onClick={close}
+              className="block px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(90deg,#ea580c,#c2410c)' }}>
               {menu.sections[0].heading}
-            </div>
+            </Link>
             <div className="py-1">
               {menu.sections[0].items.map(item => (
                 <Link key={item.label} to={item.to} onClick={close}
@@ -132,7 +134,6 @@ const MegaDropdown = ({ menu, onClose }) => {
    SMART SEARCH BAR with live suggestions
    ────────────────────────────────────────────────────────── */
 const SearchBar = ({ onSearch, className = '' }) => {
-  const { t }       = useTranslation()
   const navigate    = useNavigate()
   const [query,     setQuery]    = useState('')
   const [open,      setOpen]     = useState(false)
@@ -435,9 +436,10 @@ const Navbar = () => {
             {/* All mega-menu items flat list */}
             {MENUS.map(m => (
               <div key={m.label} className="mb-2">
-                <p className="px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#ea580c]">
+                <Link to={m.sections[0].to} onClick={close}
+                  className="block px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#ea580c] hover:underline">
                   {m.sections[0].heading}
-                </p>
+                </Link>
                 {m.sections[0].items.map(item => (
                   <Link key={item.label} to={item.to} onClick={close}
                     className="mob-item flex items-center gap-2.5 px-5 py-2 text-sm nav-text rounded-lg transition-colors">

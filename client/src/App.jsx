@@ -40,13 +40,18 @@ function App() {
         <CartProvider>
           <WishlistProvider>
             <Routes>              {/* Public */}
-              <Route path="/"            element={<Home />} />
-              <Route path="/products"    element={<Products />} />
-              <Route path="/products/:id" element={<ProductDetails />} />
-              <Route path="/login"       element={<Login />} />
-              <Route path="/register"    element={<Register />} />
-              <Route path="/about"       element={<About />} />
-              <Route path="/contact"     element={<Contact />} />
+              <Route path="/"                element={<Home />} />
+              <Route path="/products"        element={<Products />} />
+              <Route path="/products/:id"    element={<ProductDetails />} />
+              <Route path="/login"           element={<Login />} />
+              <Route path="/register"        element={<Register />} />
+              <Route path="/about"           element={<About />} />
+              <Route path="/about/story"     element={<About />} />
+              <Route path="/about/brands"    element={<About />} />
+              <Route path="/about/careers"   element={<About />} />
+              <Route path="/about/press"     element={<About />} />
+              <Route path="/about/developer" element={<About />} />
+              <Route path="/contact"         element={<Contact />} />
 
               {/* Protected customer */}
               <Route path="/cart"      element={<ProtectedRoute><Cart /></ProtectedRoute>} />
