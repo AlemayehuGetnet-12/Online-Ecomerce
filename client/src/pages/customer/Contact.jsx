@@ -153,7 +153,7 @@ const Contact = () => {
             </div>
 
             {/* Support */}
-            <div className="card p-5 bg-gradient-to-br from-[#ea580c] to-[#9a3412] border-0">
+            <div className="card p-5 border-0" style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)' }}>
               <div className="flex items-center gap-3 mb-3">
                 <MdSupportAgent className="text-white text-2xl flex-shrink-0" />
                 <h3 className="font-bold text-white">24/7 Customer Support</h3>
