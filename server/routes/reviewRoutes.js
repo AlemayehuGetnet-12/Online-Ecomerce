@@ -5,18 +5,18 @@ import {
   updateReview,
   deleteReview,
   getMyReviews,
+  getAllReviewsAdmin,
 } from '../controllers/reviewController.js'
-import { protect } from '../middleware/authMiddleware.js'
+import { protect, adminOnly } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-// Public routes
 router.get('/product/:productId', getProductReviews)
-
-// Protected routes
-router.post('/', protect, createReview)
-router.get('/my-reviews', protect, getMyReviews)
-router.put('/:id', protect, updateReview)
-router.delete('/:id', protect, deleteReview)
+router.post('/',           protect, createReview)
+router.get('/my-reviews',  protect, getMyReviews)
+router.put('/:id',         protect, updateReview)
+router.delete('/:id',      protect, deleteReview)
+// Admin
+router.get('/admin/all',   protect, adminOnly, getAllReviewsAdmin)
 
 export default router

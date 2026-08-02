@@ -242,14 +242,14 @@ const TabDeveloper = () => (
       subtitle="Alex Store is built and maintained by one passionate Ethiopian developer." />
     <div className="max-w-2xl mx-auto">
       <div className="card p-8 text-center">
-        <div className="w-24 h-24 bg-gradient-to-br from-[#ea580c] to-[#9a3412] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg">
-          <span className="text-white font-bold text-4xl">A</span>
+        <div className="w-10 h-10 bg-gradient-to-br from-[red] to-[green] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg">
+          <span className="text-red font-bold text-4xl">A</span>
         </div>
         <h3 className="text-2xl font-bold text-gray-900 dark:text-[#e2e8f0] mb-1">Alemayehu Getnet</h3>
         <p className="text-[#ea580c] font-semibold mb-1">Full-Stack Developer</p>
         <p className="text-sm text-gray-400 dark:text-[#94a3b8] mb-5">Addis Ababa, Ethiopia</p>
         <p className="text-sm text-gray-600 dark:text-[#94a3b8] leading-relaxed mb-6 max-w-lg mx-auto">
-          Passionate software engineer specializing in full-stack web development. Alex Store is built
+          Passionate Computer engineer specializing in full-stack web development. Alex Store is built
           with the MERN stack — MongoDB, Express, React 19, Node.js — with JWT auth, REST APIs,
           multi-language support (6 languages), Tailwind CSS, Framer Motion and cloud deployment on Vercel + Render.
         </p>

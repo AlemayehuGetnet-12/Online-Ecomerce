@@ -23,7 +23,7 @@ const Footer = () => (
     <style>{`
       .dark footer.alex-footer {
         background: linear-gradient(135deg,#1c2333 0%,#232d3f 60%,#1a2540 100%) !important;
-        border-top-color: #2e3a50 !important;
+        border-top-color: #fd4416 !important;
       }
       footer.alex-footer, footer.alex-footer p, footer.alex-footer span { color:#374151; }
       .dark footer.alex-footer, .dark footer.alex-footer p, .dark footer.alex-footer span { color:#94a3b8; }
@@ -46,7 +46,7 @@ const Footer = () => (
         {/* Brand — 2 cols on lg */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-2">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-[#ea0c95] rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-[red] rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-extrabold text-base">A</span>
             </div>
             <span className="text-base font-extrabold text-yellow-400 dark:text-[#2e588f]">Alex Store</span>
@@ -56,9 +56,9 @@ const Footer = () => (
           </p>
 
           {/* Social */}
-          <div className="flex items-center gap-1.5 mb-3">
+          <div className="flex items-center gap-1 mb-1">
             {[
-              { href: 'https://t.me/Alemayehu3175',            Icon: FaTelegram,   label: 'Telegram',   c: 'hover:text-sky-500' },
+              { href: 'https://t.me/Alemayehu3175',            Icon: FaTelegram,   label: 'Telegram',   c: 'hover:text-red-500' },
               { href: 'https://github.com/AlemayehuGetnet-12',  Icon: FaGithub,    label: 'GitHub',     c: 'hover:text-gray-900 dark:hover:text-white' },
               { href: '#',                                        Icon: FaInstagram, label: 'Instagram',  c: 'hover:text-pink-500' },
               { href: '#',                                        Icon: FaFacebook,  label: 'Facebook',   c: 'hover:text-blue-600' },
@@ -72,9 +72,9 @@ const Footer = () => (
           </div>
 
           {/* Contact */}
-          <ul className="space-y-1.5">
+          <ul className="space-y-1">
             {[
-              { href: 'tel:+251931756792',             Icon: MdPhone,      txt: '+251 931 756 792' },
+              { href: 'tel:+251931756792',             Icon: MdPhone,    txt: '+251 931 756 792' },
               { href: 'mailto:alexgetnet34@gmail.com',  Icon: MdEmail,      txt: 'alexgetnet34@gmail.com' },
               { href: 'https://t.me/Alemayehu3175',    Icon: FaTelegram,   txt: '@Alemayehu3175' },
               { href: null,                             Icon: MdLocationOn, txt: 'Addis Ababa, Ethiopia' },
@@ -149,7 +149,7 @@ const Footer = () => (
           <span>
             Built by{' '}
             <a href="https://alemayehu-news-app.vercel.app/" target="_blank" rel="noopener noreferrer"
-              className="text-[#08168d] font-semibold hover:underline">
+              className="text-[red] font-semibold hover:underline">
               Alemayehu Getnet
             </a>
           </span>

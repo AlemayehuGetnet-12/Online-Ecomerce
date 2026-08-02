@@ -25,21 +25,22 @@ export const register = async (req, res) => {
       })
     }
 
-    // Create user
+    // Create user — active immediately
     const user = await User.create({
       name,
       email,
       password,
       phone,
       address,
+      isActive: true,
     })
 
-    // Generate token
+    // Generate token so user is logged in right away
     const token = generateToken(user._id)
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: 'Registration successful! Welcome to Alex Store.',
       token,
       user: {
         id:      user._id,
@@ -281,6 +282,69 @@ export const getWishlist = async (req, res) => {
     res.status(200).json({
       success: true,
       wishlist: user.wishlist,
+    })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
+// @desc    Get all users (Admin)
+// @route   GET /api/auth/users
+// @access  Private/Admin
+export const getAllUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, status, role } = req.query
+    const filter = {}
+    if (status === 'active')   filter.isActive = true
+    if (status === 'inactive') filter.isActive = false
+    if (role)                  filter.role     = role
+
+    const pageNum  = Math.max(1, Number(page))
+    const limitNum = Math.min(100, Number(limit))
+    const total    = await User.countDocuments(filter)
+
+    const users = await User.find(filter)
+      .select('-password')
+      .sort('-createdAt')
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .lean()
+
+    res.status(200).json({ success: true, total, users })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
+// @desc    Activate or deactivate a user account (Admin)
+// @route   PUT /api/auth/users/:id/status
+// @access  Private/Admin
+export const setUserStatus = async (req, res) => {
+  try {
+    const { id }       = req.params
+    const { isActive } = req.body
+
+    if (typeof isActive !== 'boolean') {
+      return res.status(400).json({ success: false, message: 'isActive must be true or false' })
+    }
+
+    const user = await User.findById(id)
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+
+    // Prevent deactivating yourself
+    if (id === req.user._id.toString() && !isActive) {
+      return res.status(400).json({ success: false, message: 'You cannot deactivate your own account' })
+    }
+
+    user.isActive = isActive
+    await user.save()
+
+    res.status(200).json({
+      success: true,
+      message: isActive ? `Account activated for ${user.name}` : `Account deactivated for ${user.name}`,
+      user: { id: user._id, name: user.name, email: user.email, isActive: user.isActive, role: user.role },
     })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })

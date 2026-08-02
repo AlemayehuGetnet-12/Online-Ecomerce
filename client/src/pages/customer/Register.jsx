@@ -33,7 +33,12 @@ const Register = () => {
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
-    const result = await register({ name: form.name, email: form.email, password: form.password, phone: form.phone })
+    const result = await register({
+      name:     form.name,
+      email:    form.email,
+      password: form.password,
+      phone:    form.phone,
+    })
     setLoading(false)
     if (result.success) navigate('/')
   }

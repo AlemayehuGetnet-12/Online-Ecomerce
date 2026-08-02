@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Navbar  from '../../components/common/Navbar'
 import Footer  from '../../components/common/Footer'
@@ -8,22 +9,30 @@ import { FaTelegram, FaGithub } from 'react-icons/fa'
 
 /* ── compact contact card ─────────────────────────────── */
 const CCard = ({ icon: Icon, title, value, href, bg, ic }) => {
-  const cls = `flex items-center gap-2.5 p-3 rounded-xl card-hover ${href ? 'cursor-pointer' : ''}`
+  const cls = `flex items-center gap-2.5 p-3 rounded-xl transition-colors
+    bg-white dark:bg-[#1e293b]
+    border border-gray-100 dark:border-[#334155]
+    hover:border-[#ea580c] hover:shadow-sm
+    ${href ? 'cursor-pointer' : ''}`
   const inner = (
     <>
-      <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${bg}`}>
-        <Icon className={`text-base ${ic}`} />
+      <span className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${bg}`}>
+        <Icon className={`text-lg ${ic}`} />
       </span>
       <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-[#64748b]">{title}</p>
-        <p className="text-xs font-semibold text-gray-800 dark:text-[#e2e8f0] truncate">{value}</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-[#64748b] mb-0.5">{title}</p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-[#e2e8f0] truncate">{value}</p>
       </div>
     </>
   )
   if (!href) return <div className={cls}>{inner}</div>
   return (
-    <a href={href} target={href.startsWith('http') ? '_blank' : undefined}
-      rel="noopener noreferrer" className={cls}>{inner}</a>
+    <a href={href}
+      target={href.startsWith('http') ? '_blank' : undefined}
+      rel="noopener noreferrer"
+      className={cls}>
+      {inner}
+    </a>
   )
 }
 
@@ -64,10 +73,10 @@ const Contact = () => {
           {/* Left column */}
           <div className="lg:col-span-2 space-y-3">
 
-            {/* Contact cards — compact */}
-            <div className="card p-3 space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#ea580c] px-1 mb-2">Contact Details</p>
-              <CCard icon={MdPhone}      title="Phone"    value="+251 931 756 792"      href="tel:+251931756792"                   bg="bg-green-100 dark:bg-green-900/30" ic="text-green-600" />
+            {/* Contact cards — each with own card bg */}
+            <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-[#334155] bg-white dark:bg-[#1e293b] p-1 space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#ea580c] px-3 pt-2 pb-1">Contact Details</p>
+              <CCard icon={MdPhone}      title="Phone"    value="+251 931 756 792"      href="tel:+251931756792"       bg="bg-blue-100 dark:bg-blue-900/30" ic="text-green-600" />
               <CCard icon={MdEmail}      title="Email"    value="alexgetnet34@gmail.com" href="mailto:alexgetnet34@gmail.com"       bg="bg-blue-100 dark:bg-blue-900/30"   ic="text-blue-600" />
               <CCard icon={FaTelegram}   title="Telegram" value="@Alemayehu3175"         href="https://t.me/Alemayehu3175"          bg="bg-sky-100 dark:bg-sky-900/30"     ic="text-sky-500"  />
               <CCard icon={FaGithub}     title="GitHub"   value="AlemayehuGetnet-12"     href="https://github.com/AlemayehuGetnet-12" bg="bg-gray-100 dark:bg-gray-800"   ic="text-gray-700 dark:text-white" />
@@ -75,21 +84,21 @@ const Contact = () => {
             </div>
 
             {/* Working hours — compact */}
-            <div className="card p-3">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-xl border border-gray-200 dark:border-[#334155] bg-white dark:bg-[#1e293b] p-4">
+              <div className="flex items-center gap-2 mb-3">
                 <span className="w-7 h-7 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
                   <MdAccessTime className="text-purple-600 text-sm" />
                 </span>
-                <p className="text-xs font-bold text-gray-800 dark:text-[#e2e8f0]">Working Hours</p>
+                <p className="text-sm font-bold text-gray-800 dark:text-[#e2e8f0]">Working Hours</p>
               </div>
-              <div className="space-y-1 text-xs text-gray-600 dark:text-[#94a3b8]">
+              <div className="space-y-1.5 text-xs">
                 {[
                   ['Mon – Fri', '8:00 AM – 8:00 PM'],
                   ['Saturday',  '9:00 AM – 6:00 PM'],
                   ['Sunday',    '10:00 AM – 4:00 PM'],
                 ].map(([day, time]) => (
                   <div key={day} className="flex justify-between">
-                    <span>{day}</span>
+                    <span className="text-gray-500 dark:text-[#94a3b8]">{day}</span>
                     <span className="font-semibold text-gray-900 dark:text-[#e2e8f0]">{time}</span>
                   </div>
                 ))}
@@ -112,7 +121,7 @@ const Contact = () => {
           {/* Right column — form */}
           <div className="lg:col-span-3">
             <motion.div initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
-              className="card p-5">
+              className="rounded-xl border border-gray-200 dark:border-[#334155] bg-white dark:bg-[#1e293b] p-6">
 
               <h2 className="text-base font-bold text-gray-900 dark:text-[#e2e8f0] mb-4 flex items-center gap-2">
                 <MdSend className="text-[#ea580c]" /> Send Us a Message

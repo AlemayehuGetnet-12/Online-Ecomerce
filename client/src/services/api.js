@@ -96,10 +96,11 @@ export const paymentAPI = {
 // Review APIs
 export const reviewAPI = {
   getProductReviews: (productId, params) => api.get(`/reviews/product/${productId}`, { params }),
-  create: (data) => api.post('/reviews', data),
-  update: (id, data) => api.put(`/reviews/${id}`, data),
-  delete: (id) => api.delete(`/reviews/${id}`),
-  getMyReviews: () => api.get('/reviews/my-reviews'),
+  create:     (data)  => api.post('/reviews', data),
+  update:     (id, data) => api.put(`/reviews/${id}`, data),
+  delete:     (id)    => api.delete(`/reviews/${id}`),
+  getMyReviews: ()    => api.get('/reviews/my-reviews'),
+  getAllAdmin: (params) => api.get('/reviews/admin/all', { params }),
 }
 
 // Report APIs

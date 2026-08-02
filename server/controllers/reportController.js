@@ -1,7 +1,8 @@
-import Order from '../models/Order.js'
-import Product from '../models/Product.js'
-import User from '../models/User.js'
-import Payment from '../models/Payment.js'
+import Order   from '../models/Order.js'
+import Product  from '../models/Product.js'
+import User     from '../models/User.js'
+import Payment  from '../models/Payment.js'
+import Review   from '../models/Review.js'
 
 // @desc    Get sales report
 // @route   GET /api/reports/sales
@@ -227,10 +228,19 @@ export const getCustomerReport = async (req, res) => {
 // @access  Private/Admin
 export const getDashboardSummary = async (req, res) => {
   try {
-    const totalProducts  = await Product.countDocuments({ isActive: true })
-    const totalCustomers = await User.countDocuments({ role: 'customer' })
-    const totalOrders    = await Order.countDocuments()
-    const pendingOrders  = await Order.countDocuments({ orderStatus: 'pending' })
+    const totalProducts    = await Product.countDocuments({ isActive: true })
+    const totalCustomers   = await User.countDocuments({ role: 'customer' })
+    const totalOrders      = await Order.countDocuments()
+    const pendingOrders    = await Order.countDocuments({ orderStatus: 'pending' })
+    const totalReviews     = await Review.countDocuments()
+
+    // Total items sold across all paid orders
+    const soldResult = await Order.aggregate([
+      { $match: { paymentStatus: 'paid' } },
+      { $unwind: '$items' },
+      { $group: { _id: null, totalSold: { $sum: '$items.quantity' } } },
+    ])
+    const totalSold = soldResult[0]?.totalSold || 0
 
     const revenueResult = await Order.aggregate([
       { $match: { paymentStatus: 'paid' } },
@@ -240,8 +250,17 @@ export const getDashboardSummary = async (req, res) => {
 
     const lowStockProducts = await Product.countDocuments({ isActive: true, stock: { $lte: 10 } })
 
+    // Recent orders with user info
     const recentOrders = await Order.find()
       .populate('user', 'name email')
+      .sort('-createdAt')
+      .limit(5)
+      .lean()
+
+    // Recent reviews / comments
+    const recentReviews = await Review.find()
+      .populate('user',    'name avatar')
+      .populate('product', 'name images')
       .sort('-createdAt')
       .limit(5)
       .lean()
@@ -255,8 +274,11 @@ export const getDashboardSummary = async (req, res) => {
         pendingOrders,
         totalRevenue,
         lowStockProducts,
+        totalSold,
+        totalReviews,
       },
       recentOrders,
+      recentReviews,
     })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })

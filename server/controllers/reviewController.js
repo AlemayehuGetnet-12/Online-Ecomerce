@@ -171,3 +171,30 @@ export const getMyReviews = async (req, res) => {
     res.status(500).json({ success: false, message: error.message })
   }
 }
+
+// @desc    Get all reviews (Admin)
+// @route   GET /api/reviews/admin/all
+// @access  Private/Admin
+export const getAllReviewsAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, rating } = req.query
+    const filter = {}
+    if (rating) filter.rating = Number(rating)
+
+    const pageNum  = Math.max(1, Number(page))
+    const limitNum = Math.min(100, Number(limit))
+    const total    = await Review.countDocuments(filter)
+
+    const reviews = await Review.find(filter)
+      .populate('user',    'name email avatar')
+      .populate('product', 'name images price')
+      .sort('-createdAt')
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .lean()
+
+    res.status(200).json({ success: true, total, reviews })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
