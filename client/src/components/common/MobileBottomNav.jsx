@@ -23,10 +23,11 @@ const MobileBottomNav = () => {
   const active = (path) =>
     location.pathname === path || location.pathname.startsWith(path + '/')
 
-  const Item = ({ to, icon: Icon, label, badge }) => {
+  const renderItem = (to, Icon, label, badge) => {
     const isActive = active(to)
     return (
       <Link
+        key={to}
         to={to}
         className="flex flex-col items-center justify-center flex-1 h-full gap-0.5 transition-colors"
         style={{ color: isActive ? '#ea580c' : '#9ca3af' }}
@@ -46,15 +47,15 @@ const MobileBottomNav = () => {
 
   return (
     <nav className="mobile-bottom-nav md:hidden">
-      <Item to="/"         icon={MdHome}        label="Home"     />
-      <Item to="/products" icon={MdSearch}       label="Search"   />
-      <Item to="/cart"     icon={MdShoppingCart} label="Cart"    badge={getCartCount()} />
-      <Item to="/wishlist" icon={MdFavorite}     label="Wishlist" />
-      <Item
-        to={isAuthenticated ? '/profile' : '/login'}
-        icon={MdPerson}
-        label={isAuthenticated ? 'Profile' : 'Login'}
-      />
+      {renderItem('/', MdHome, 'Home')}
+      {renderItem('/products', MdSearch, 'Search')}
+      {renderItem('/cart', MdShoppingCart, 'Cart', getCartCount())}
+      {renderItem('/wishlist', MdFavorite, 'Wishlist')}
+      {renderItem(
+        isAuthenticated ? '/profile' : '/login',
+        MdPerson,
+        isAuthenticated ? 'Profile' : 'Login'
+      )}
     </nav>
   )
 }

@@ -58,6 +58,7 @@ const ProductDetails = () => {
     }
     load()
     window.scrollTo(0, 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const submitReview = async e => {

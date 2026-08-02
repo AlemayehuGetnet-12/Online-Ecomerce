@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 
 const AuthContext = createContext()
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {
@@ -26,6 +27,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token])
 
+  const logout = () => {
+    setUser(null)
+    setToken(null)
+    localStorage.removeItem('token')
+    delete axios.defaults.headers.common['Authorization']
+    toast.success('Logout successful')
+  }
+
   // Load user on mount
   useEffect(() => {
     const loadUser = async () => {
@@ -41,6 +50,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false)
     }
     loadUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   const login = async (email, password) => {
@@ -71,14 +81,6 @@ export const AuthProvider = ({ children }) => {
       toast.error(message)
       return { success: false, message }
     }
-  }
-
-  const logout = () => {
-    setUser(null)
-    setToken(null)
-    localStorage.removeItem('token')
-    delete axios.defaults.headers.common['Authorization']
-    toast.success('Logout successful')
   }
 
   const updateUser = (updatedUser) => {

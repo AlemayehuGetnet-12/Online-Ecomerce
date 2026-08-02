@@ -10,7 +10,7 @@ import { MdFilterList, MdSearch, MdClose } from 'react-icons/md'
 
 const Products = () => {
   const { t } = useTranslation()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const [products,   setProducts]   = useState([])
   const [categories, setCategories] = useState([])
@@ -43,12 +43,14 @@ const Products = () => {
   }, [filters])
 
   useEffect(() => { categoryAPI.getAll({ isActive: true }).then(r => setCategories(r.data.categories || [])).catch(() => {}) }, [])
-  useEffect(() => { loadProducts(1, filters); setPage(1) }, [filters.category, filters.sort, filters.minPrice, filters.maxPrice, filters.minRating])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { loadProducts(1, filters) }, [filters.category, filters.sort, filters.minPrice, filters.maxPrice, filters.minRating])
 
   const handleSearchSubmit = e => { e.preventDefault(); loadProducts(1, filters); setPage(1) }
   const handlePageChange   = p => { setPage(p); loadProducts(p, filters) }
 
-  const setFilter = (key, val) => setFilters(prev => ({ ...prev, [key]: val }))
+  const setFilter = (key, val) => { setFilters(prev => ({ ...prev, [key]: val })); setPage(1) }
+  const clearFilters = () => { setFilters({ search: '', category: '', minPrice: '', maxPrice: '', minRating: '', sort: '-createdAt' }); setPage(1) }
 
   const sortOptions = [
     { value: '-createdAt', label: t('products.sortNewest') },
@@ -60,7 +62,7 @@ const Products = () => {
 
   const pages = Math.ceil(total / limit)
 
-  const FilterPanel = () => (
+  const renderFilterPanel = () => (
     <div className="space-y-5">
       {/* Category */}
       <div>
@@ -103,7 +105,7 @@ const Products = () => {
         ))}
       </div>
 
-      <button onClick={() => setFilters({ search: '', category: '', minPrice: '', maxPrice: '', minRating: '', sort: '-createdAt' })} className="btn btn-secondary w-full text-sm">
+      <button onClick={clearFilters} className="btn btn-secondary w-full text-sm">
         {t('common.clear')}
       </button>
     </div>
@@ -137,7 +139,7 @@ const Products = () => {
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="card p-4 sticky top-20">
               <h3 className="font-bold text-gray-900 dark:text-[#e2e8f0] mb-4 flex items-center gap-2"><MdFilterList /> {t('common.filter')}</h3>
-              <FilterPanel />
+              {renderFilterPanel()}
             </div>
           </aside>
 
@@ -150,7 +152,7 @@ const Products = () => {
                   <h3 className="font-bold text-lg dark:text-[#e2e8f0]">{t('common.filter')}</h3>
                   <button onClick={() => setShowFilter(false)}><MdClose className="text-2xl" /></button>
                 </div>
-                <FilterPanel />
+                {renderFilterPanel()}
               </div>
             </div>
           )}

@@ -41,7 +41,7 @@ const AdminLayout = ({ children, title }) => {
   )
 
   /* ── Sidebar content ─────────────────────────────── */
-  const SidebarInner = ({ isMobile }) => (
+  const renderSidebar = (isMobile) => (
     <aside
       className="flex flex-col h-full transition-all duration-300"
       style={{
@@ -162,7 +162,7 @@ const AdminLayout = ({ children, title }) => {
   )
 
   /* ── Breadcrumb ── */
-  const Breadcrumb = () => (
+  const renderBreadcrumb = () => (
     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-[#64748b]">
       <span className="text-[#ea580c] font-medium">Admin</span>
       {currentLink && (
@@ -186,14 +186,14 @@ const AdminLayout = ({ children, title }) => {
       `}</style>
 
       {/* Desktop sidebar */}
-      <SidebarInner isMobile={false} />
+      {renderSidebar(false)}
 
       {/* Mobile overlay */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={close} />
           <div className="relative z-10 h-full">
-            <SidebarInner isMobile />
+            {renderSidebar(true)}
           </div>
           <button onClick={close} className="absolute top-4 right-4 z-20 w-9 h-9 bg-white/20 rounded-full flex items-center justify-center text-white">
             <MdClose className="text-xl" />
@@ -224,7 +224,7 @@ const AdminLayout = ({ children, title }) => {
 
             <div>
               <h1 className="admin-title font-bold text-lg text-gray-900 leading-none">{title}</h1>
-              <div className="admin-bread mt-0.5"><Breadcrumb /></div>
+              <div className="admin-bread mt-0.5">{renderBreadcrumb()}</div>
             </div>
           </div>
 

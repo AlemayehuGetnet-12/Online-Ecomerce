@@ -21,6 +21,9 @@ import Orders        from './pages/customer/Orders'
 import OrderDetails  from './pages/customer/OrderDetails'
 import About         from './pages/customer/About'
 import Contact       from './pages/customer/Contact'
+import HelpCenter    from './pages/customer/HelpCenter'
+import Shipping      from './pages/customer/Shipping'
+import Returns       from './pages/customer/Returns'
 import NotFound      from './pages/customer/NotFound'
 
 // ── Admin Pages ───────────────────────────────────────────────
@@ -52,6 +55,9 @@ function App() {
               <Route path="/about/press"     element={<About />} />
               <Route path="/about/developer" element={<About />} />
               <Route path="/contact"         element={<Contact />} />
+              <Route path="/help"            element={<HelpCenter />} />
+              <Route path="/shipping"        element={<Shipping />} />
+              <Route path="/returns"         element={<Returns />} />
 
               {/* Protected customer */}
               <Route path="/cart"      element={<ProtectedRoute><Cart /></ProtectedRoute>} />

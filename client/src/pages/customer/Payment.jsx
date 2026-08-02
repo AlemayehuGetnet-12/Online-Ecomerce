@@ -11,17 +11,16 @@ const Payment = () => {
   const { t }       = useTranslation()
   const location    = useLocation()
   const navigate    = useNavigate()
-  const { orderId, paymentMethod, amount } = location.state || {}
+  const { orderId, paymentMethod } = location.state || {}
 
   const [phone,    setPhone]    = useState('')
   const [txId,     setTxId]     = useState('')
   const [step,     setStep]     = useState('initiate') // initiate | verify | success
   const [loading,  setLoading]  = useState(false)
 
-  useEffect(() => { if (!orderId) navigate('/orders') }, [orderId])
+  useEffect(() => { if (!orderId) navigate('/orders') }, [orderId, navigate])
 
-  const isMobile = paymentMethod === 'telebirr' || paymentMethod === 'cbe_birr'
-  const isCOD    = paymentMethod === 'cash_on_delivery'
+  const isCOD = paymentMethod === 'cash_on_delivery'
 
   if (isCOD) return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0f172a]">

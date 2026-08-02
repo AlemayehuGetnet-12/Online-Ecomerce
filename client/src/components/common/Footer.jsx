@@ -46,10 +46,10 @@ const Footer = () => (
         {/* Brand — 2 cols on lg */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-2">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-[#ea580c] rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-[#ea0c95] rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-extrabold text-base">A</span>
             </div>
-            <span className="text-base font-extrabold text-gray-900 dark:text-[#e2e8f0]">Alex Store</span>
+            <span className="text-base font-extrabold text-yellow-400 dark:text-[#2e588f]">Alex Store</span>
           </div>
           <p className="text-xs leading-relaxed mb-3 max-w-xs">
             Ethiopia's trusted online marketplace. Fast delivery · Secure payment · Genuine products.
@@ -82,7 +82,7 @@ const Footer = () => (
               const inner = (
                 <span className="flex items-center gap-2 text-xs">
                   <span className="fi w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Icon className="text-[#ea580c] text-xs" />
+                    <Icon className="text-[#300d4d] text-xs" />
                   </span>
                   {txt}
                 </span>
@@ -105,7 +105,7 @@ const Footer = () => (
         {/* About Alex Store */}
         <Col title="About Alex Store">
           <li><FL to="/about">About Us</FL></li>
-          <li><FL to="/about#story">Our Story</FL></li>
+          <li><FL to="/about">Our Story</FL></li>
           <li><FL to="/about#careers">Careers</FL></li>
           <li><FL to="/about#brands">Our Brands</FL></li>
           <li><FL to="/about">Press & Media</FL></li>
@@ -113,9 +113,9 @@ const Footer = () => (
 
         {/* Customer Service */}
         <Col title="Customer Service">
-          <li><FL to="/contact">Help Center</FL></li>
-          <li><FL to="/contact#shipping">Shipping Info</FL></li>
-          <li><FL to="/contact#returns">Returns & Refunds</FL></li>
+          <li><FL to="/help">Help Center</FL></li>
+          <li><FL to="/shipping">Shipping Info</FL></li>
+          <li><FL to="/returns">Returns & Refunds</FL></li>
           <li><FL to="/contact">Contact Us</FL></li>
           <li><FL to="/orders">Track My Order</FL></li>
         </Col>
@@ -136,8 +136,7 @@ const Footer = () => (
           <li><FL to="/about">🔭 Vision</FL></li>
           <li><FL to="/about">💎 Values</FL></li>
           <li><FL to="/contact">🤝 Help</FL></li>
-          <li><FL to="/about">👷 Mobile User</FL></li>
-          <li><FL to="/about">⚙️ Product Eng.</FL></li>
+          
         </Col>
       </div>
 
@@ -149,8 +148,8 @@ const Footer = () => (
           <Link to="/terms"   className="footer-link">Terms</Link>
           <span>
             Built by{' '}
-            <a href="https://github.com/AlemayehuGetnet-12" target="_blank" rel="noopener noreferrer"
-              className="text-[#ea580c] font-semibold hover:underline">
+            <a href="https://alemayehu-news-app.vercel.app/" target="_blank" rel="noopener noreferrer"
+              className="text-[#08168d] font-semibold hover:underline">
               Alemayehu Getnet
             </a>
           </span>

@@ -53,13 +53,13 @@ const MENUS = [
     label: 'Customer Service',
     sections: [
       {
-        heading: 'Customer Service', to: '/contact',
+        heading: 'Customer Service',
         items: [
-          { label: 'Help Center',      to: '/contact',   icon: '❓' },
-          { label: 'Shipping Info',    to: '/shipping', icon: '🚚' },
-          { label: 'Returns & Refunds',to: '/returns',  icon: '↩️' },
-          { label: 'Contact Us',       to: '/contact',  icon: '💬' },
-          { label: 'Track My Order',   to: '/orders',   icon: '📦' },
+          { label: 'Help Center',       to: '/help',     icon: '❓' },
+          { label: 'Shipping Info',     to: '/shipping', icon: '🚚' },
+          { label: 'Returns & Refunds', to: '/returns',  icon: '↩️' },
+          { label: 'Contact Us',        to: '/contact',  icon: '💬' },
+          { label: 'Track My Order',    to: '/orders',   icon: '📦' },
         ],
       },
     ],

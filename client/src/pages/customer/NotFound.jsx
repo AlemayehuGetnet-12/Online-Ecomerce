@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
 
 const NotFound = () => {
-  const { t } = useTranslation()
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-[#0f172a]">
       <Navbar />

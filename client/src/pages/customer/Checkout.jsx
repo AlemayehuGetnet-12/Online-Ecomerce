@@ -67,8 +67,8 @@ const Checkout = () => {
     setLoading(false)
   }
 
-  const F = ({ label, k, type='text', placeholder, required=true }) => (
-    <div>
+  const renderField = (label, k, type='text', placeholder, required=true) => (
+    <div key={k}>
       <label className="label">{label} {required && <span className="text-red-500">*</span>}</label>
       <input type={type} className={`input ${errors[k] ? 'input-error' : ''}`} placeholder={placeholder} value={address[k]} onChange={e => setAddress(a => ({ ...a, [k]: e.target.value }))} />
       {errors[k] && <p className="text-red-500 text-xs mt-1">{errors[k]}</p>}
@@ -87,14 +87,14 @@ const Checkout = () => {
               <div className="card p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-[#e2e8f0] mb-5 flex items-center gap-2"><MdLocationOn className="text-[#ea580c]" /> {t('checkout.shippingAddress')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <F label={t('checkout.fullName')} k="fullName" placeholder="John Doe" />
-                  <F label={t('checkout.phone')} k="phone" type="tel" placeholder="+251 9xx xxx xxx" />
-                  <F label={t('checkout.email')} k="email" type="email" placeholder="you@example.com" required={false} />
-                  <F label={t('checkout.street')} k="street" placeholder="123 Main St" />
-                  <F label={t('checkout.city')} k="city" placeholder="Addis Ababa" />
-                  <F label={t('checkout.region')} k="region" placeholder="Addis Ababa" required={false} />
-                  <F label={t('checkout.country')} k="country" placeholder="Ethiopia" />
-                  <F label={t('checkout.zipCode')} k="zipCode" placeholder="1000" required={false} />
+                  {renderField(t('checkout.fullName'), 'fullName', 'text', 'John Doe')}
+                  {renderField(t('checkout.phone'), 'phone', 'tel', '+251 9xx xxx xxx')}
+                  {renderField(t('checkout.email'), 'email', 'email', 'you@example.com', false)}
+                  {renderField(t('checkout.street'), 'street', 'text', '123 Main St')}
+                  {renderField(t('checkout.city'), 'city', 'text', 'Addis Ababa')}
+                  {renderField(t('checkout.region'), 'region', 'text', 'Addis Ababa', false)}
+                  {renderField(t('checkout.country'), 'country', 'text', 'Ethiopia')}
+                  {renderField(t('checkout.zipCode'), 'zipCode', 'text', '1000', false)}
                 </div>
               </div>
 
