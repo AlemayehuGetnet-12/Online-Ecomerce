@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
@@ -7,16 +7,48 @@ import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
 import { MdEmail, MdLock, MdPerson, MdPhone, MdArrowForward, MdVerified } from 'react-icons/md'
 
+const FormField = ({ label, type = 'text', Icon, placeholder, value, error, onChange }) => (
+  <div>
+    <label className="label text-sm">{label}</label>
+    <div className="relative">
+      <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+      <input type={type}
+        className={`input pl-10 text-sm ${error ? 'input-error' : ''}`}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+  </div>
+)
+
 const Register = () => {
   const { t }                      = useTranslation()
-  const { register, isAuthenticated } = useAuth()
+  const { register, isAuthenticated, loading: authLoading } = useAuth()
   const navigate                   = useNavigate()
+  const location                   = useLocation()
+  const from                       = location.state?.from?.pathname || '/'
 
   const [form,    setForm]    = useState({ name:'', email:'', password:'', confirmPassword:'', phone:'' })
   const [errors,  setErrors]  = useState({})
   const [loading, setLoading] = useState(false)
 
-  if (isAuthenticated) { navigate('/'); return null }
+  useEffect(() => {
+    if (isAuthenticated) navigate(from, { replace: true })
+  }, [isAuthenticated, from, navigate])
+
+  if (authLoading || isAuthenticated) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="spinner w-8 h-8 border-2 border-[#ea580c]" />
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   const validate = () => {
     const e = {}
@@ -40,24 +72,10 @@ const Register = () => {
       phone:    form.phone,
     })
     setLoading(false)
-    if (result.success) navigate('/')
+    if (result.success) navigate(from, { replace: true })
   }
 
-  const F = ({ k, label, type='text', Icon, placeholder }) => (
-    <div>
-      <label className="label text-sm">{label}</label>
-      <div className="relative">
-        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-        <input type={type}
-          className={`input pl-10 text-sm ${errors[k] ? 'input-error' : ''}`}
-          placeholder={placeholder}
-          value={form[k]}
-          onChange={e => { setForm({ ...form, [k]: e.target.value }); setErrors({}) }}
-        />
-      </div>
-      {errors[k] && <p className="text-red-500 text-xs mt-1">{errors[k]}</p>}
-    </div>
-  )
+  const update = (k, v) => { setForm({ ...form, [k]: v }); setErrors({}) }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0f172a]">
@@ -94,11 +112,21 @@ const Register = () => {
 
             {/* ── Form ── */}
             <form onSubmit={handleSubmit} className="space-y-3">
-              <F k="name"            label={t('auth.name')}            type="text"     Icon={MdPerson}  placeholder="Full Name" />
-              <F k="email"           label={t('auth.email')}           type="email"    Icon={MdEmail}   placeholder="you@example.com" />
-              <F k="phone"           label={t('auth.phone')}           type="tel"      Icon={MdPhone}   placeholder="+251 9xx xxx xxx" />
-              <F k="password"        label={t('auth.password')}        type="password" Icon={MdLock}    placeholder="••••••••" />
-              <F k="confirmPassword" label={t('auth.confirmPassword')} type="password" Icon={MdLock}    placeholder="••••••••" />
+              <FormField label={t('auth.name')} type="text" Icon={MdPerson} placeholder="Full Name"
+                value={form.name} error={errors.name}
+                onChange={e => update('name', e.target.value)} />
+              <FormField label={t('auth.email')} type="email" Icon={MdEmail} placeholder="yous@example.com"
+                value={form.email} error={errors.email}
+                onChange={e => update('email', e.target.value)} />
+              <FormField label={t('auth.phone')} type="tel" Icon={MdPhone} placeholder="+251 9xx xxx xxx"
+                value={form.phone} error={errors.phone}
+                onChange={e => update('phone', e.target.value)} />
+              <FormField label={t('auth.password')} type="password" Icon={MdLock} placeholder="inser password"
+                value={form.password} error={errors.password}
+                onChange={e => update('password', e.target.value)} />
+              <FormField label={t('auth.confirmPassword')} type="password" Icon={MdLock} placeholder="Confrim password"
+                value={form.confirmPassword} error={errors.confirmPassword}
+                onChange={e => update('confirmPassword', e.target.value)} />
 
               <div className="flex items-start gap-2 py-1">
                 <MdVerified className="text-green-500 text-base flex-shrink-0 mt-0.5" />
@@ -121,7 +149,7 @@ const Register = () => {
               <p className="text-sm text-gray-500 dark:text-[#94a3b8] mb-3">
                 {t('auth.alreadyHaveAccount')}
               </p>
-              <Link to="/login"
+              <Link to="/login" state={location.state}
                 className="btn w-full py-2.5 text-sm font-semibold border-2 border-[#ea580c] text-[#ea580c] hover:bg-orange-50 dark:hover:bg-[#1e293b] gap-2 justify-center">
                 {t('auth.loginButton')} — Sign In to Your Account
                 <MdArrowForward className="text-base" />

@@ -35,6 +35,7 @@ import CustomerManagement  from './pages/admin/CustomerManagement'
 import InventoryManagement from './pages/admin/InventoryManagement'
 import PaymentManagement   from './pages/admin/PaymentManagement'
 import SalesReports        from './pages/admin/SalesReports'
+import MessageManagement   from './pages/admin/MessageManagement'
 
 function App() {
   return (
@@ -59,8 +60,8 @@ function App() {
               <Route path="/shipping"        element={<Shipping />} />
               <Route path="/returns"         element={<Returns />} />
 
-              {/* Protected customer */}
-              <Route path="/cart"      element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+              {/* Cart is public (stored in localStorage) — checkout requires auth */}
+              <Route path="/cart"      element={<Cart />} />
               <Route path="/wishlist"  element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
               <Route path="/checkout"  element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
               <Route path="/payment"   element={<ProtectedRoute><Payment /></ProtectedRoute>} />
@@ -77,6 +78,7 @@ function App() {
               <Route path="/admin/inventory"  element={<ProtectedRoute adminOnly><InventoryManagement /></ProtectedRoute>} />
               <Route path="/admin/payments"   element={<ProtectedRoute adminOnly><PaymentManagement /></ProtectedRoute>} />
               <Route path="/admin/reports"    element={<ProtectedRoute adminOnly><SalesReports /></ProtectedRoute>} />
+              <Route path="/admin/messages"   element={<ProtectedRoute adminOnly><MessageManagement /></ProtectedRoute>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />

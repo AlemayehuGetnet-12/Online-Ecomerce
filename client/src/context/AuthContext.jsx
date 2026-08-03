@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api/client'
 import toast from 'react-hot-toast'
 
 const AuthContext = createContext()
@@ -18,20 +18,18 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState(() => localStorage.getItem('token'))
 
-  // Configure axios defaults
+  // The api client (from api/client.js) already handles attaching the
+  // Authorization header via its request interceptor, so we don't need
+  // to manually set axios.defaults here. We keep this effect for any
+  // components that might still reference the token value directly.
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    } else {
-      delete axios.defaults.headers.common['Authorization']
-    }
+    // Token is already attached by the api client interceptor
   }, [token])
 
   const logout = () => {
     setUser(null)
     setToken(null)
     localStorage.removeItem('token')
-    delete axios.defaults.headers.common['Authorization']
     toast.success('Logout successful')
   }
 
@@ -40,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
-          const { data } = await axios.get('/api/auth/me')
+          const { data } = await api.get('/auth/me')
           setUser(data.user)
         } catch (error) {
           console.error('Failed to load user:', error)
@@ -55,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const { data } = await axios.post('/api/auth/login', { email, password })
+      const { data } = await api.post('/auth/login', { email, password })
       setToken(data.token)
       setUser(data.user)
       localStorage.setItem('token', data.token)
@@ -70,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const { data } = await axios.post('/api/auth/register', userData)
+      const { data } = await api.post('/auth/register', userData)
       setToken(data.token)
       setUser(data.user)
       localStorage.setItem('token', data.token)

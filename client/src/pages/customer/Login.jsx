@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
@@ -9,7 +9,7 @@ import { MdEmail, MdLock, MdArrowForward } from 'react-icons/md'
 
 const Login = () => {
   const { t }                    = useTranslation()
-  const { login, isAuthenticated } = useAuth()
+  const { login, isAuthenticated, loading: authLoading } = useAuth()
   const navigate                 = useNavigate()
   const location                 = useLocation()
   const from = location.state?.from?.pathname || '/'
@@ -18,11 +18,25 @@ const Login = () => {
   const [errors,  setErrors]  = useState({})
   const [loading, setLoading] = useState(false)
 
-  if (isAuthenticated) { navigate(from, { replace: true }); return null }
+  useEffect(() => {
+    if (isAuthenticated) navigate(from, { replace: true })
+  }, [isAuthenticated, from, navigate])
+
+  if (authLoading || isAuthenticated) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="spinner w-8 h-8 border-2 border-[#ea580c]" />
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   const validate = () => {
     const e = {}
-    if (!form.email)    e.email    = t('auth.emailRequired')
+    if (!form.email)  e.email    = t('auth.emailRequired')
     if (!form.password) e.password = t('auth.passwordRequired')
     return e
   }
@@ -86,7 +100,7 @@ const Login = () => {
                   <MdEmail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
                   <input type="email"
                     className={`input pl-10 text-sm ${errors.email ? 'input-error' : ''}`}
-                    placeholder="you@example.com"
+                    placeholder="your@example.com"
                     value={form.email}
                     onChange={e => { setForm({ ...form, email: e.target.value }); setErrors({}) }}
                   />
@@ -100,7 +114,7 @@ const Login = () => {
                   <MdLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
                   <input type="password"
                     className={`input pl-10 text-sm ${errors.password ? 'input-error' : ''}`}
-                    placeholder="••••••••"
+                    placeholder="insert password"
                     value={form.password}
                     onChange={e => { setForm({ ...form, password: e.target.value }); setErrors({}) }}
                   />
@@ -122,7 +136,7 @@ const Login = () => {
               <p className="text-sm text-gray-500 dark:text-[#94a3b8] mb-3">
                 {t('auth.dontHaveAccount')}
               </p>
-              <Link to="/register"
+              <Link to="/register" state={location.state}
                 className="btn w-full py-2.5 text-sm font-semibold border-2 border-[#ea580c] text-[#ea580c] hover:bg-orange-50 dark:hover:bg-[#1e293b] gap-2 justify-center">
                 {t('auth.registerButton')} — Create a Free Account
                 <MdArrowForward className="text-base" />

@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Navbar  from '../../components/common/Navbar'
 import Footer  from '../../components/common/Footer'
 import toast   from 'react-hot-toast'
+import { contactAPI } from '../../services/api'
 import { MdPhone, MdEmail, MdLocationOn, MdSend, MdAccessTime, MdSupportAgent } from 'react-icons/md'
 import { FaTelegram, FaGithub } from 'react-icons/fa'
 
@@ -44,10 +44,20 @@ const Contact = () => {
     e.preventDefault()
     if (!form.name || !form.email || !form.message) { toast.error('Fill all required fields'); return }
     setBusy(true)
-    await new Promise(r => setTimeout(r, 1000))
-    toast.success('Message sent!')
-    setForm({ name:'', email:'', subject:'', message:'' })
-    setBusy(false)
+    try {
+      await contactAPI.sendMessage({
+        name:    form.name,
+        email:   form.email,
+        subject: form.subject || 'other',
+        message: form.message,
+      })
+      toast.success('Message sent! We will get back to you soon.')
+      setForm({ name:'', email:'', subject:'', message:'' })
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to send message. Please try again.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -171,7 +181,7 @@ const Contact = () => {
 
               {/* Quick contact */}
               <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#334155]">
-                <p className="text-xs text-gray-400 text-center mb-2">Or reach us directly</p>
+                <p className="text-xs text-gray-400 dark:text-[#94a3b8] text-center mb-2">Or reach us directly</p>
                 <div className="grid grid-cols-2 gap-2">
                   <a href="tel:+251931756792"
                     className="btn btn-secondary py-2 gap-1.5 text-xs justify-center">

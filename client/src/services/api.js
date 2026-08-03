@@ -1,7 +1,15 @@
 import axios from 'axios'
 
+// Determine the API base URL:
+// - If VITE_API_URL is set, use it (for separate client/server deployments)
+// - Otherwise, use relative '/api' (works with Vite proxy in dev, and when
+//   the server serves the client in production)
+const baseURL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -110,6 +118,16 @@ export const reportAPI = {
   getRevenue: () => api.get('/reports/revenue'),
   getProducts: () => api.get('/reports/products'),
   getCustomers: () => api.get('/reports/customers'),
+}
+
+// Contact APIs
+export const contactAPI = {
+  sendMessage: (data) => api.post('/contact', data),
+  // Admin
+  getMessages: (params) => api.get('/contact', { params }),
+  getMessage:  (id) => api.get(`/contact/${id}`),
+  markAsRead:  (id) => api.put(`/contact/${id}/read`),
+  deleteMessage: (id) => api.delete(`/contact/${id}`),
 }
 
 export default api

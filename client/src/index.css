@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode (Tailwind v4 CSS-first config) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ── Tailwind v4 CSS-first theme ──────────────────────────────── */
 @theme {
   /* Brand colors */
@@ -385,4 +388,19 @@ button, a, [role="button"] {
 /* Add padding to body when bottom nav is visible */
 @media (max-width: 767px) {
   body.has-bottom-nav { padding-bottom: 56px; }
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

@@ -3,7 +3,10 @@ import mongoose from 'mongoose'
 const connectDB = async () => {
   let uri = process.env.MONGO_URI || ''
 
-  // ── If no real URI is set, spin up an in-memory MongoDB ──────────────
+  // Debug: show URI being loaded (remove later)
+  console.log('🔍 MONGO_URI:', uri)
+
+  // Use in-memory MongoDB if no URI is configured
   const needsMemory =
     !uri ||
     uri.includes('PASTE_YOUR') ||
@@ -13,22 +16,28 @@ const connectDB = async () => {
   if (needsMemory) {
     try {
       const { MongoMemoryServer } = await import('mongodb-memory-server')
+
       const mongod = await MongoMemoryServer.create()
       uri = mongod.getUri()
-      console.log('⚠️  No Atlas URI found — using in-memory MongoDB (data resets on restart)')
-      console.log('📌 To persist data, set MONGO_URI in server/.env to your Atlas connection string')
-    } catch (e) {
-      console.error('❌ Failed to start in-memory MongoDB:', e.message)
+
+      console.log('⚠️ No Atlas URI found — using in-memory MongoDB')
+      console.log('📌 Set MONGO_URI in .env to use MongoDB Atlas')
+    } catch (error) {
+      console.error('❌ Failed to start in-memory MongoDB:', error.message)
       process.exit(1)
     }
   }
 
   try {
-    const conn = await mongoose.connect(uri)
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+    })
+
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`)
     console.log(`📊 Database: ${conn.connection.name}`)
   } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`)
+    console.error('❌ MongoDB Connection Error:')
+    console.error(error.message)
     process.exit(1)
   }
 }

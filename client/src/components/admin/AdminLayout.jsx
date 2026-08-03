@@ -8,7 +8,7 @@ import {
   MdDashboard, MdInventory, MdCategory, MdShoppingCart,
   MdPeople, MdWarehouse, MdPayment, MdBarChart, MdMenu,
   MdClose, MdLogout, MdLightMode, MdDarkMode, MdStore,
-  MdArrowForwardIos, MdHome,
+  MdArrowForwardIos, MdHome, MdMail,
 } from 'react-icons/md'
 
 const links = [
@@ -20,6 +20,7 @@ const links = [
   { to: '/admin/inventory',  icon: MdWarehouse,   label: 'admin.inventory',             color: '#ef4444' },
   { to: '/admin/payments',   icon: MdPayment,     label: 'admin.payments',              color: '#06b6d4' },
   { to: '/admin/reports',    icon: MdBarChart,    label: 'admin.reports',               color: '#ec4899' },
+  { to: '/admin/messages',   icon: MdMail,         label: 'admin.messages',              color: '#0ea5e9' },
 ]
 
 /* ── Badge for quick stats (optional) ───────────────── */
