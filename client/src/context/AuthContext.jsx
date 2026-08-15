@@ -1,105 +1,223 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import api from '../api/client'
-import toast from 'react-hot-toast'
+import { createContext, useContext, useState, useEffect } from "react"
+import api from "../api/client"
+import toast from "react-hot-toast"
 
 const AuthContext = createContext()
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext)
+
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
+    throw new Error("useAuth must be used within AuthProvider")
   }
+
   return context
 }
 
+
 export const AuthProvider = ({ children }) => {
+
   const [user, setUser] = useState(null)
+  const [token, setToken] = useState(
+    () => localStorage.getItem("token")
+  )
   const [loading, setLoading] = useState(true)
-  const [token, setToken] = useState(() => localStorage.getItem('token'))
 
-  // The api client (from api/client.js) already handles attaching the
-  // Authorization header via its request interceptor, so we don't need
-  // to manually set axios.defaults here. We keep this effect for any
-  // components that might still reference the token value directly.
+
+  // Load logged-in user
   useEffect(() => {
-    // Token is already attached by the api client interceptor
-  }, [token])
 
-  const logout = () => {
-    setUser(null)
-    setToken(null)
-    localStorage.removeItem('token')
-    toast.success('Logout successful')
-  }
-
-  // Load user on mount
-  useEffect(() => {
     const loadUser = async () => {
+
       if (token) {
+
         try {
-          const { data } = await api.get('/auth/me')
+
+          const { data } = await api.get("/auth/me")
+
           setUser(data.user)
+
         } catch (error) {
-          console.error('Failed to load user:', error)
+
+          console.error(
+            "Load user error:",
+            error.response?.data || error.message
+          )
+
           logout()
+
         }
+
       }
+
       setLoading(false)
+
     }
+
+
     loadUser()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [token])
 
+
+  // LOGIN
   const login = async (email, password) => {
+
     try {
-      const { data } = await api.post('/auth/login', { email, password })
+
+      const { data } = await api.post("/auth/login", {
+        email,
+        password,
+      })
+
+
+      localStorage.setItem(
+        "token",
+        data.token
+      )
+
+
       setToken(data.token)
+
       setUser(data.user)
-      localStorage.setItem('token', data.token)
-      toast.success(data.message || 'Login successful')
-      return { success: true }
+
+
+      toast.success(
+        data.message || "Login successful"
+      )
+
+
+      return data
+
+
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed'
+
+
+      const message =
+        error.response?.data?.message ||
+        "Login failed"
+
+
       toast.error(message)
-      return { success: false, message }
+
+
+      throw new Error(message)
+
     }
+
   }
 
+
+
+  // REGISTER
   const register = async (userData) => {
+
     try {
-      const { data } = await api.post('/auth/register', userData)
+
+      const { data } = await api.post(
+        "/auth/register",
+        userData
+      )
+
+
+      localStorage.setItem(
+        "token",
+        data.token
+      )
+
+
       setToken(data.token)
+
       setUser(data.user)
-      localStorage.setItem('token', data.token)
-      toast.success(data.message || 'Registration successful')
-      return { success: true }
+
+
+      toast.success(
+        data.message || "Registration successful"
+      )
+
+
+      return data
+
+
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed'
+
+
+      const message =
+        error.response?.data?.message ||
+        "Registration failed"
+
+
       toast.error(message)
-      return { success: false, message }
+
+
+      throw new Error(message)
+
     }
+
   }
 
-  const updateUser = (updatedUser) => {
-    setUser(updatedUser)
+
+
+  // LOGOUT
+  const logout = () => {
+
+    localStorage.removeItem("token")
+
+    setToken(null)
+
+    setUser(null)
+
+
+    toast.success(
+      "Logout successful"
+    )
+
   }
+
+
+
+  // UPDATE USER
+  const updateUser = (updatedUser) => {
+
+    setUser(updatedUser)
+
+  }
+
+
 
   return (
+
     <AuthContext.Provider
+
       value={{
+
         user,
+
         token,
+
         loading,
+
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
+
+        isAdmin: user?.role === "admin",
+
+
         login,
+
         register,
+
         logout,
+
         updateUser,
+
       }}
+
     >
+
       {children}
+
     </AuthContext.Provider>
+
   )
+
 }

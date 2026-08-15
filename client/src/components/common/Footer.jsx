@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { MdEmail, MdPhone, MdLocationOn } from 'react-icons/md'
 import { FaTelegram, FaGithub, FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa'
+import logo from '../../assets/images/logo.svg'
 
 const FL = ({ to, href, children }) => {
   const cls = 'flex items-center gap-1.5 text-xs footer-link py-0.5 hover:text-[#ea580c] transition-colors'
@@ -46,9 +47,11 @@ const Footer = () => (
         {/* Brand — 2 cols on lg */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-2">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-[red] rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-extrabold text-base">A</span>
-            </div>
+            <img
+              src={logo}
+              alt="Alex Store"
+              className="w-8 h-8 rounded-lg flex-shrink-0 object-contain"
+            />
             <span className="text-base font-extrabold text-yellow-400 dark:text-[#2e588f]">Alex Store</span>
           </div>
           <p className="text-xs leading-relaxed mb-3 max-w-xs">

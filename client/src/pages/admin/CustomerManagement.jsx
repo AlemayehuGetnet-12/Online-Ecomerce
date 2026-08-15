@@ -11,7 +11,7 @@ const CustomerManagement = () => {
   const [search,    setSearch]    = useState('')
 
   useEffect(() => {
-    axios.get('/api/reports/customers').then(r => {
+    axios.get('/api/reports/customers').then(() => {
       // Show all users via a separate admin endpoint — we display the top customers + fallback
       setCustomers([])
     }).catch(()=>{})

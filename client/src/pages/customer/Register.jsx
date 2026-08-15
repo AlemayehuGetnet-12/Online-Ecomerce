@@ -5,23 +5,36 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
-import { MdEmail, MdLock, MdPerson, MdPhone, MdArrowForward, MdVerified } from 'react-icons/md'
+import { MdEmail, MdLock, MdPerson, MdPhone, MdArrowForward, MdVerified, MdVisibility, MdVisibilityOff } from 'react-icons/md'
 
-const FormField = ({ label, type = 'text', Icon, placeholder, value, error, onChange }) => (
-  <div>
-    <label className="label text-sm">{label}</label>
-    <div className="relative">
-      <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-      <input type={type}
-        className={`input pl-10 text-sm ${error ? 'input-error' : ''}`}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
+const FormField = ({ label, type = 'text', Icon, placeholder, value, error, onChange }) => {
+  const [showPassword, setShowPassword] = useState(false)
+  const isPassword = type === 'password'
+  const inputType = isPassword ? (showPassword ? 'text' : 'password') : type
+
+  return (
+    <div>
+      <label className="label text-sm">{label}</label>
+      <div className="relative">
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+        <input type={inputType}
+          className={`input pl-10 ${isPassword ? 'pr-10' : ''} text-sm ${error ? 'input-error' : ''}`}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+        />
+        {isPassword && (
+          <button type="button" onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}>
+            {showPassword ? <MdVisibilityOff className="text-lg" /> : <MdVisibility className="text-lg" />}
+          </button>
+        )}
+      </div>
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
-    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-  </div>
-)
+  )
+}
 
 const Register = () => {
   const { t }                      = useTranslation()

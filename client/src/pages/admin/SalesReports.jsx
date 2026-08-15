@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import AdminLayout from '../../components/admin/AdminLayout'
 import Loader from '../../components/common/Loader'
 import { reportAPI } from '../../services/api'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 
 const COLORS = ['#ea580c','#3b82f6','#22c55e','#f59e0b','#8b5cf6','#ec4899']
 

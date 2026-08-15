@@ -1,24 +1,18 @@
-import axios from 'axios'
-
-// API Base URL
-const baseURL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
-  : 'http://localhost:5000/api'
-
-console.log('API Base URL:', baseURL)
+import axios from "axios"
 
 const api = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: "http://localhost:5000/api",
   timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 })
 
-// Attach JWT token to every request
+
+// Attach JWT token automatically
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token")
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -26,28 +20,38 @@ api.interceptors.request.use(
 
     return config
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error)
+  }
 )
 
-// Handle responses and auth errors
+
+// Handle API errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response
+  },
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token')
 
-      const currentPath = window.location.pathname
+    if (error.code === "ECONNABORTED") {
+      console.error("Request timeout")
+    }
 
-      if (
-        currentPath !== '/login' &&
-        currentPath !== '/register'
-      ) {
-        window.location.href = '/login'
-      }
+    if (error.response) {
+      console.error(
+        "API Error:",
+        error.response.data
+      )
+    } else {
+      console.error(
+        "Network Error:",
+        error.message
+      )
     }
 
     return Promise.reject(error)
   }
 )
+
 
 export default api

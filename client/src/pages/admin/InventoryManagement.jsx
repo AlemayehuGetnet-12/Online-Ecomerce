@@ -20,6 +20,7 @@ const InventoryManagement = () => {
     productAPI.getLowStock(100).then(r => setProducts(r.data.products || [])).catch(()=>{}).finally(()=>setLoading(false))
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(load, [])
 
   const handleSaveStock = async id => {

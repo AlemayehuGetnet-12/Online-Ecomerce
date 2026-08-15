@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 
 const WishlistContext = createContext()
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useWishlist = () => {
   const context = useContext(WishlistContext)
   if (!context) {
@@ -18,15 +19,6 @@ export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Load wishlist when user is authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadWishlist()
-    } else {
-      setWishlist([])
-    }
-  }, [isAuthenticated])
-
   const loadWishlist = async () => {
     try {
       setLoading(true)
@@ -38,6 +30,16 @@ export const WishlistProvider = ({ children }) => {
       setLoading(false)
     }
   }
+
+  // Load wishlist when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadWishlist()
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setWishlist([])
+    }
+  }, [isAuthenticated])
 
   const addToWishlist = async (productId) => {
     if (!isAuthenticated) {

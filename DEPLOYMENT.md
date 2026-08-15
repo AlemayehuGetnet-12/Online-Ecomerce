@@ -32,8 +32,8 @@ If login fails on the deployed Vercel site (e.g., https://alex-online-ecomerce.v
    JWT_SECRET=alex-store-super-secret-jwt-key-2024-change-in-production
    JWT_EXPIRE=30d
    CLIENT_URL=https://alex-online-ecomerce.vercel.app
-   CLOUDINARY_CLOUD_NAME=ng6ytmpu
-   CLOUDINARY_API_KEY=585635264273683
+   CLOUDINARY_CLOUD_NAME=
+   CLOUDINARY_API_KEY=
    CLOUDINARY_API_SECRET=<your cloudinary secret>
    ```
 
@@ -61,18 +61,12 @@ If login fails on the deployed Vercel site (e.g., https://alex-online-ecomerce.v
 ### Step 4: Test Login
 
 After redeployment, test login with:
-- **Admin**: `admin@alexstore.com` / `admin123`
-- **Customer**: `customer@alexstore.com` / `customer123`
+- **Admin**: `admin@alexstore.com` / `possword`
+- **Customer**: `customer@alexstore.com` / `password`
 
 ## Seed Data
 
 The database is automatically seeded on server startup with:
-
-| Role     | Email                   | Password      |
-|----------|-------------------------|---------------|
-| Admin    | `tolgi@alexstore.com`   | `tolgi123`    |
-| Admin    | `admin@alexstore.com`  | `admin123`    |
-| Customer | `customer@alexstore.com` | `customer123` |
 
 The seed only runs if the database is empty (no products).
 

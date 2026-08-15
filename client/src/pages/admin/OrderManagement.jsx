@@ -28,6 +28,7 @@ const OrderManagement = () => {
     orderAPI.getAll(params).then(r => { setOrders(r.data.orders || []); setTotal(r.data.total || 0) }).catch(()=>{}).finally(()=>setLoading(false))
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => load(), [])
 
   const openUpdate = o => { setSelected(o); setNewStatus(o.orderStatus); setNote('') }

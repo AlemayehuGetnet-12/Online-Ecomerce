@@ -5,6 +5,8 @@ import { useAuth }    from '../../context/AuthContext'
 import { useCart }    from '../../context/CartContext'
 import { useTheme }   from '../../context/ThemeContext'
 import LanguageSwitcher from './LanguageSwitcher'
+import logo from '../../assets/images/logo.svg'
+import { MenuIcon } from './MenuIcons'
 import {
   MdShoppingCart, MdFavorite, MdPerson, MdMenu, MdClose,
   MdLightMode, MdDarkMode, MdLogout, MdDashboard, MdSearch,
@@ -70,11 +72,11 @@ const MENUS = [
       {
         heading: 'Shop', to: '/products',
         items: [
-     { label: 'Best Sellers',  to: '/products?sort=-soldCount', icon: '🔥' },
-     { label: 'New Arrivals', to: '/products?sort=-createdAt',  icon: '✨' },
+     { label: 'Best Sellers',  to: '/about/story', icon: '🔥' },
+     { label: 'New Arrivals', to: '/shipping',  icon: '✨' },
     { label: 'Fashion',    to: '/products?category=fashion', icon: '👗' },
-   { label: 'Electronics', to: '/products?category=electronics', icon: '📱' },
-   { label: 'On Sale',  to: '/products?discount=true',    icon: '🏷️' },
+   { label: 'Electronics', to: '/returns', icon: '📱' },
+   { label: 'On Sale',  to: '/products',    icon: '🏷️' },
   { label: 'Featured',  to: '/products?isFeatured=true',  icon: '⭐' },
         ],
       },
@@ -118,7 +120,7 @@ const MegaDropdown = ({ menu, onClose }) => {
               {menu.sections[0].items.map(item => (
                 <Link key={item.label} to={item.to} onClick={close}
                   className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 dark:text-[#e2e8f0] hover:bg-orange-50 dark:hover:bg-[#334155] hover:text-[#ea580c] transition-colors">
-                  <span className="text-base w-5 text-center flex-shrink-0">{item.icon}</span>
+                  <MenuIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
                   {item.label}
                 </Link>
               ))}
@@ -303,9 +305,11 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1.5 flex-shrink-0 mr-1">
-            <div className="w-8 h-8 bg-[#ea580c] rounded-lg flex items-center justify-center shadow flex-shrink-0">
-              <span className="text-white font-bold text-base">A</span>
-            </div>
+            <img
+              src={logo}
+              alt="Alex Store"
+              className="w-8 h-8 rounded-lg shadow flex-shrink-0 object-contain"
+            />
             <span className="hidden sm:block text-base font-bold nav-text leading-none">Alex Store</span>
           </Link>
 
@@ -443,7 +447,7 @@ const Navbar = () => {
                 {m.sections[0].items.map(item => (
                   <Link key={item.label} to={item.to} onClick={close}
                     className="mob-item flex items-center gap-2.5 px-5 py-2 text-sm nav-text rounded-lg transition-colors">
-                    <span className="w-5 text-center">{item.icon}</span>
+                    <MenuIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
                     {item.label}
                   </Link>
                 ))}

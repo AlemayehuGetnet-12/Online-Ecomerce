@@ -18,6 +18,7 @@ const CategoryManagement = () => {
   const [saving,     setSaving]     = useState(false)
 
   const load = () => { setLoading(true); categoryAPI.getAll().then(r => setCategories(r.data.categories || [])).catch(()=>{}).finally(()=>setLoading(false)) }
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(load, [])
 
   const openAdd  = () => { setForm(emptyForm); setEditItem(null); setShowModal(true) }

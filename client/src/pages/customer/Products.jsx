@@ -44,6 +44,7 @@ const Products = () => {
 
   useEffect(() => { categoryAPI.getAll({ isActive: true }).then(r => setCategories(r.data.categories || [])).catch(() => {}) }, [])
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadProducts(1, filters) }, [filters.category, filters.sort, filters.minPrice, filters.maxPrice, filters.minRating])
 
   const handleSearchSubmit = e => { e.preventDefault(); loadProducts(1, filters); setPage(1) }

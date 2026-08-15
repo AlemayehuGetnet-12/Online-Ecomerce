@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
-import { MdEmail, MdLock, MdArrowForward } from 'react-icons/md'
+import { MdEmail, MdLock, MdArrowForward, MdVisibility, MdVisibilityOff } from 'react-icons/md'
 
 const Login = () => {
   const { t }                    = useTranslation()
@@ -17,6 +17,7 @@ const Login = () => {
   const [form,    setForm]    = useState({ email: '', password: '' })
   const [errors,  setErrors]  = useState({})
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated) navigate(from, { replace: true })
@@ -46,9 +47,14 @@ const Login = () => {
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
-    const result = await login(form.email, form.password)
-    setLoading(false)
-    if (result.success) navigate(from, { replace: true })
+    try {
+      const result = await login(form.email, form.password)
+      if (result.success) navigate(from, { replace: true })
+    } catch (error) {
+      console.error('Login error:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const fillDemo = (role) => {
@@ -112,12 +118,17 @@ const Login = () => {
                 <label className="label text-sm">{t('auth.password')}</label>
                 <div className="relative">
                   <MdLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-                  <input type="password"
-                    className={`input pl-10 text-sm ${errors.password ? 'input-error' : ''}`}
+                  <input type={showPassword ? 'text' : 'password'}
+                    className={`input pl-10 pr-10 text-sm ${errors.password ? 'input-error' : ''}`}
                     placeholder="insert password"
                     value={form.password}
                     onChange={e => { setForm({ ...form, password: e.target.value }); setErrors({}) }}
                   />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}>
+                    {showPassword ? <MdVisibilityOff className="text-lg" /> : <MdVisibility className="text-lg" />}
+                  </button>
                 </div>
                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>

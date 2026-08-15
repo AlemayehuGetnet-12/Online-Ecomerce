@@ -24,6 +24,7 @@ const PaymentManagement = () => {
     paymentAPI.getAll(params).then(r => setPayments(r.data.payments || [])).catch(()=>{}).finally(()=>setLoading(false))
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(load, [])
 
   const handleUpdate = async () => {

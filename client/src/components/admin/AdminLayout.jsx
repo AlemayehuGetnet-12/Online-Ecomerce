@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import LanguageSwitcher from '../common/LanguageSwitcher'
+import logo from '../../assets/images/logo.svg'
 import {
   MdDashboard, MdInventory, MdCategory, MdShoppingCart,
   MdPeople, MdWarehouse, MdPayment, MdBarChart, MdMenu,
-  MdClose, MdLogout, MdLightMode, MdDarkMode, MdStore,
+  MdClose, MdLogout, MdLightMode, MdDarkMode,
   MdArrowForwardIos, MdHome, MdMail,
 } from 'react-icons/md'
 
@@ -53,10 +54,11 @@ const AdminLayout = ({ children, title }) => {
     >
       {/* ── Logo ── */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10 flex-shrink-0">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"
-          style={{ background: 'linear-gradient(135deg,#ea580c,#c2410c)' }}>
-          <MdStore className="text-white text-xl" />
-        </div>
+        <img
+          src={logo}
+          alt="Alex Store"
+          className="w-10 h-10 rounded-xl flex-shrink-0 shadow-lg object-contain"
+        />
         {(!collapsed || isMobile) && (
           <div className="min-w-0">
             <p className="font-extrabold text-white text-base leading-none">Alex Store</p>

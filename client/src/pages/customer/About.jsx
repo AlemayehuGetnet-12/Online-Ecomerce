@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 import Navbar from '../../components/common/Navbar'
 import Footer from '../../components/common/Footer'
 import {
-  MdVerified, MdLocalShipping, MdSecurity, MdSupportAgent,
   MdShoppingBag, MdStar, MdGroup, MdStorefront,
 } from 'react-icons/md'
 import { FaTelegram, FaGithub } from 'react-icons/fa'
