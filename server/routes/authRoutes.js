@@ -20,17 +20,17 @@ router.post('/register', register)
 router.post('/login',    login)
 
 // Protected
-router.get('/me',             protect, getMe)
-router.put('/profile',        protect, updateProfile)
-router.put('/change-password',protect, changePassword)
+router.get('/me',              protect, getMe)
+router.put('/profile',         protect, updateProfile)
+router.put('/change-password', protect, changePassword)
 
 // Wishlist
-router.get('/wishlist',              protect, getWishlist)
-router.post('/wishlist/:productId',  protect, addToWishlist)
-router.delete('/wishlist/:productId',protect, removeFromWishlist)
+router.get('/wishlist',               protect, getWishlist)
+router.post('/wishlist/:productId',   protect, addToWishlist)
+router.delete('/wishlist/:productId', protect, removeFromWishlist)
 
 // Admin — user management
-router.get('/users',              protect, adminOnly, getAllUsers)
-router.put('/users/:id/status',   protect, adminOnly, setUserStatus)
+router.get('/users',            protect, adminOnly, getAllUsers)
+router.put('/users/:id/status', protect, adminOnly, setUserStatus)
 
 export default router
