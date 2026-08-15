@@ -39,7 +39,7 @@ const MENUS = [
     label: 'About Us',
     sections: [
       {
-        heading: 'About Alex Store',
+        heading: 'About Alex Store', to: '/about',
         items: [
           { label: 'About Us',      to: '/about',            icon: '🏢' },
           { label: 'Our Story',     to: '/about/story',      icon: '📖' },
@@ -55,7 +55,7 @@ const MENUS = [
     label: 'Customer Service',
     sections: [
       {
-        heading: 'Customer Service',
+        heading: 'Customer Service', to: '/help',
         items: [
           { label: 'Help Center',       to: '/help',     icon: '❓' },
           { label: 'Shipping Info',     to: '/shipping', icon: '🚚' },
@@ -72,12 +72,12 @@ const MENUS = [
       {
         heading: 'Shop', to: '/products',
         items: [
-     { label: 'Best Sellers',  to: '/about/story', icon: '🔥' },
-     { label: 'New Arrivals', to: '/shipping',  icon: '✨' },
-    { label: 'Fashion',    to: '/products?category=fashion', icon: '👗' },
-   { label: 'Electronics', to: '/returns', icon: '📱' },
-   { label: 'On Sale',  to: '/products',    icon: '🏷️' },
-  { label: 'Featured',  to: '/products?isFeatured=true',  icon: '⭐' },
+          { label: 'Best Sellers',  to: '/products?sort=-soldCount',      icon: '🔥' },
+          { label: 'New Arrivals',  to: '/products?sort=-createdAt',      icon: '✨' },
+          { label: 'Fashion',       to: '/products?category=fashion',     icon: '👗' },
+          { label: 'Electronics',   to: '/products?category=electronics', icon: '📱' },
+          { label: 'On Sale',       to: '/products?discount=true',        icon: '🏷️' },
+          { label: 'Featured',      to: '/products?isFeatured=true',      icon: '⭐' },
         ],
       },
     ],

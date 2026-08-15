@@ -43,9 +43,19 @@ const Products = () => {
   }, [filters])
 
   useEffect(() => { categoryAPI.getAll({ isActive: true }).then(r => setCategories(r.data.categories || [])).catch(() => {}) }, [])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { loadProducts(1, filters) }, [filters.category, filters.sort, filters.minPrice, filters.maxPrice, filters.minRating])
+  useEffect(() => {
+    const f = {
+      search:    searchParams.get('search')   || '',
+      category:  searchParams.get('category') || '',
+      minPrice:  searchParams.get('minPrice') || '',
+      maxPrice:  searchParams.get('maxPrice') || '',
+      minRating: '',
+      sort:      searchParams.get('sort')     || '-createdAt',
+    }
+    setFilters(f)
+    loadProducts(1, f)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString()])
 
   const handleSearchSubmit = e => { e.preventDefault(); loadProducts(1, filters); setPage(1) }
   const handlePageChange   = p => { setPage(p); loadProducts(p, filters) }

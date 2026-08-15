@@ -87,7 +87,7 @@ const ProductDetails = () => {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-[#0f172a]">
       <Navbar />
-      <main className="flex-1 container-custom py-8">
+      <main className="flex-1 container-custom py-8 pb-24 md:pb-8">
         {/* Main product section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
           {/* Images */}
@@ -242,6 +242,25 @@ const ProductDetails = () => {
           </div>
         )}
       </main>
+      {/* Mobile sticky CTA */}
+      {product.stock > 0 && (
+        <div className="mobile-sticky-cta md:hidden">
+          <div className="flex gap-3">
+            <button
+              onClick={() => addToCart(product, qty)}
+              className="btn btn-primary flex-1 py-3 text-sm font-semibold"
+            >
+              <MdShoppingCart className="text-lg" /> Add to Cart
+            </button>
+            <button
+              onClick={() => { addToCart(product, qty); navigate('/checkout') }}
+              className="btn btn-outline flex-1 py-3 text-sm font-semibold"
+            >
+              <MdFlashOn className="text-lg" /> Buy Now
+            </button>
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   )

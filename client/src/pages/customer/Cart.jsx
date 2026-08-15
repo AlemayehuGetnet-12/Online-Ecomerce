@@ -30,7 +30,7 @@ const Cart = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0f172a]">
       <Navbar />
-      <main className="flex-1 container-custom py-8">
+      <main className="flex-1 container-custom py-8 pb-32 md:pb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-[#e2e8f0] mb-6">{t('cart.title')}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -88,6 +88,19 @@ const Cart = () => {
           </div>
         </div>
       </main>
+      {/* Mobile sticky checkout CTA */}
+      <div className="mobile-sticky-cta md:hidden">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-gray-600 dark:text-[#94a3b8]">Total</span>
+          <span className="text-lg font-bold text-[#ea580c]">{total.toFixed(2)} ETB</span>
+        </div>
+        <button
+          onClick={() => navigate('/checkout')}
+          className="btn btn-primary w-full py-3 text-base font-semibold"
+        >
+          {t('cart.proceedToCheckout')} →
+        </button>
+      </div>
       <Footer />
     </div>
   )

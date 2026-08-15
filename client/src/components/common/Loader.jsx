@@ -8,8 +8,8 @@ const Loader = ({ fullScreen = false, size = 'md' }) => {
 
   const spinner = (
     <div
-      className={`${sizeClasses[size]} border-gray-200 border-t-primary-600 rounded-full animate-spin`}
-    ></div>
+      className={`${sizeClasses[size]} border-gray-200 border-t-[#ea580c] rounded-full animate-spin`}
+    />
   )
 
   if (fullScreen) {

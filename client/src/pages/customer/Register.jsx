@@ -134,10 +134,10 @@ const Register = () => {
               <FormField label={t('auth.phone')} type="tel" Icon={MdPhone} placeholder="+251 9xx xxx xxx"
                 value={form.phone} error={errors.phone}
                 onChange={e => update('phone', e.target.value)} />
-              <FormField label={t('auth.password')} type="password" Icon={MdLock} placeholder="inser password"
+              <FormField label={t('auth.password')} type="password" Icon={MdLock} placeholder="Enter password"
                 value={form.password} error={errors.password}
                 onChange={e => update('password', e.target.value)} />
-              <FormField label={t('auth.confirmPassword')} type="password" Icon={MdLock} placeholder="Confrim password"
+              <FormField label={t('auth.confirmPassword')} type="password" Icon={MdLock} placeholder="Confirm password"
                 value={form.confirmPassword} error={errors.confirmPassword}
                 onChange={e => update('confirmPassword', e.target.value)} />
 
