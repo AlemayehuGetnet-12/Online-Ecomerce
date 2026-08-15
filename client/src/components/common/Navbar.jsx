@@ -7,7 +7,6 @@ import { useTheme }   from '../../context/ThemeContext'
 import api            from '../../services/api'
 import LanguageSwitcher from './LanguageSwitcher'
 import logo from '../../assets/images/logo.svg'
-import { MenuIcon } from './MenuIcons'
 import {
   MdShoppingCart, MdFavorite, MdPerson, MdMenu, MdClose,
   MdLightMode, MdDarkMode, MdLogout, MdDashboard, MdSearch,
