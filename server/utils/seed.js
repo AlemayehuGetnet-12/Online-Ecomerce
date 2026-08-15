@@ -10,11 +10,24 @@ const discounted = (price, pct) =>
 
 export const seedDatabase = async () => {
   try {
-    const existing = await Product.countDocuments()
-    if (existing > 0) {
-      console.log(`📦 Database already has ${existing} products — skipping seed`)
+    const productCount  = await Product.countDocuments()
+    const categoryCount = await Category.countDocuments()
+    const userCount     = await User.countDocuments()
+
+    const forceSeed = process.env.FORCE_SEED === 'true'
+
+    // Seed if forced, OR if any collection is empty (incomplete data)
+    if (!forceSeed && productCount > 0 && categoryCount > 0 && userCount > 0) {
+      console.log(`📦 Database OK — ${productCount} products, ${categoryCount} categories, ${userCount} users`)
       return
     }
+
+    if (forceSeed) {
+      console.log('🔄 FORCE_SEED=true — wiping and reseeding...')
+    } else {
+      console.log(`⚠️  Incomplete data (products:${productCount} categories:${categoryCount} users:${userCount}) — reseeding...`)
+    }
+
     await runSeed()
   } catch (err) {
     console.error('❌ Seed error:', err.message)
