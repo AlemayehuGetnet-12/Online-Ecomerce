@@ -12,4 +12,21 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // UI / animation
+          'vendor-ui': ['framer-motion', 'react-icons'],
+          // Data / utils
+          'vendor-data': ['axios', 'react-hot-toast', 'i18next', 'react-i18next'],
+          // Charts (used only in admin)
+          'vendor-charts': ['recharts'],
+        },
+      },
+    },
+  },
 })
