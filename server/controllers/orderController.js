@@ -1,6 +1,7 @@
-import Order from '../models/Order.js'
-import Product from '../models/Product.js'
-import Payment from '../models/Payment.js'
+import Order   from '../models/Order.js'
+import Product  from '../models/Product.js'
+import Payment  from '../models/Payment.js'
+import { serverError } from '../utils/apiError.js'
 
 // @desc    Create a new order
 // @route   POST /api/orders
@@ -13,7 +14,6 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'No items in order' })
     }
 
-    // Validate items and reduce stock
     let itemsTotal = 0
     const orderItems = []
 
@@ -21,19 +21,11 @@ export const createOrder = async (req, res) => {
       const product = await Product.findById(item.product)
 
       if (!product) {
-        return res.status(404).json({
-          success: false,
-          message: `Product not found: ${item.product}`,
-        })
+        return res.status(404).json({ success: false, message: `Product not found: ${item.product}` })
       }
-
       if (!product.isActive) {
-        return res.status(400).json({
-          success: false,
-          message: `Product is not available: ${product.name}`,
-        })
+        return res.status(400).json({ success: false, message: `Product is not available: ${product.name}` })
       }
-
       if (product.stock < item.quantity) {
         return res.status(400).json({
           success: false,
@@ -54,18 +46,17 @@ export const createOrder = async (req, res) => {
         subtotal,
       })
 
-      // Reduce stock
       product.stock     -= item.quantity
       product.soldCount += item.quantity
       await product.save()
     }
 
-    const shippingCost  = itemsTotal >= 500 ? 0 : 50
-    const totalAmount   = parseFloat((itemsTotal + shippingCost).toFixed(2))
+    const shippingCost = itemsTotal >= 500 ? 0 : 50
+    const totalAmount  = parseFloat((itemsTotal + shippingCost).toFixed(2))
 
     const order = await Order.create({
-      user:            req.user._id,
-      items:           orderItems,
+      user: req.user._id,
+      items: orderItems,
       shippingAddress,
       itemsTotal,
       shippingCost,
@@ -75,7 +66,6 @@ export const createOrder = async (req, res) => {
       statusHistory: [{ status: 'pending', updatedBy: req.user._id }],
     })
 
-    // Create initial payment record
     await Payment.create({
       user:          req.user._id,
       order:         order._id,
@@ -83,13 +73,9 @@ export const createOrder = async (req, res) => {
       paymentMethod,
     })
 
-    res.status(201).json({
-      success: true,
-      message: 'Order placed successfully',
-      order,
-    })
+    res.status(201).json({ success: true, message: 'Order placed successfully', order })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'createOrder')
   }
 }
 
@@ -114,15 +100,9 @@ export const getMyOrders = async (req, res) => {
       .populate('items.product', 'name images')
       .lean()
 
-    res.status(200).json({
-      success: true,
-      total,
-      page:    pageNum,
-      pages:   Math.ceil(total / limitNum),
-      orders,
-    })
+    res.status(200).json({ success: true, total, page: pageNum, pages: Math.ceil(total / limitNum), orders })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getMyOrders')
   }
 }
 
@@ -139,17 +119,14 @@ export const getOrder = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Order not found' })
     }
 
-    // Customers can only see their own orders
     if (req.user.role !== 'admin' && order.user._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized to view this order' })
     }
 
-    // Get associated payment
     const payment = await Payment.findOne({ order: order._id }).lean()
-
     res.status(200).json({ success: true, order, payment })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getOrder')
   }
 }
 
@@ -158,14 +135,7 @@ export const getOrder = async (req, res) => {
 // @access  Private/Admin
 export const getAllOrders = async (req, res) => {
   try {
-    const {
-      page          = 1,
-      limit         = 20,
-      status,
-      paymentStatus,
-      search,
-      sort          = '-createdAt',
-    } = req.query
+    const { page = 1, limit = 20, status, paymentStatus, sort = '-createdAt' } = req.query
 
     const filter = {}
     if (status)        filter.orderStatus   = status
@@ -189,15 +159,9 @@ export const getAllOrders = async (req, res) => {
       .limit(limitNum)
       .lean()
 
-    res.status(200).json({
-      success: true,
-      total,
-      page:    pageNum,
-      pages:   Math.ceil(total / limitNum),
-      orders,
-    })
+    res.status(200).json({ success: true, total, page: pageNum, pages: Math.ceil(total / limitNum), orders })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getAllOrders')
   }
 }
 
@@ -206,7 +170,7 @@ export const getAllOrders = async (req, res) => {
 // @access  Private/Admin
 export const updateOrderStatus = async (req, res) => {
   try {
-    const { id }                           = req.params
+    const { id } = req.params
     const { orderStatus, note, cancelReason } = req.body
 
     const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled']
@@ -219,54 +183,38 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Order not found' })
     }
 
-    // Prevent re-cancelling or updating delivered orders
     if (order.orderStatus === 'delivered') {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot update a delivered order',
-      })
+      return res.status(400).json({ success: false, message: 'Cannot update a delivered order' })
     }
 
     const previousStatus = order.orderStatus
 
-    // Handle cancellation — restore stock
     if (orderStatus === 'cancelled' && previousStatus !== 'cancelled') {
       for (const item of order.items) {
         await Product.findByIdAndUpdate(item.product, {
           $inc: { stock: item.quantity, soldCount: -item.quantity },
         })
       }
-      order.cancelledAt = new Date()
+      order.cancelledAt  = new Date()
       order.cancelReason = cancelReason || ''
-
-      // Update payment status to cancelled
       await Payment.findOneAndUpdate({ order: order._id }, { paymentStatus: 'cancelled' })
     }
 
-    // Handle delivery — mark payment as paid (for cash on delivery)
     if (orderStatus === 'delivered') {
       order.deliveredAt = new Date()
       if (order.paymentMethod === 'cash_on_delivery') {
         order.paymentStatus = 'paid'
-        await Payment.findOneAndUpdate(
-          { order: order._id },
-          { paymentStatus: 'paid', paidAt: new Date() }
-        )
+        await Payment.findOneAndUpdate({ order: order._id }, { paymentStatus: 'paid', paidAt: new Date() })
       }
     }
 
     order.orderStatus = orderStatus
-    order.statusHistory.push({
-      status:    orderStatus,
-      note:      note || '',
-      updatedBy: req.user._id,
-    })
-
+    order.statusHistory.push({ status: orderStatus, note: note || '', updatedBy: req.user._id })
     await order.save()
 
     res.status(200).json({ success: true, message: 'Order status updated successfully', order })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'updateOrderStatus')
   }
 }
 
@@ -275,7 +223,7 @@ export const updateOrderStatus = async (req, res) => {
 // @access  Private
 export const cancelOrder = async (req, res) => {
   try {
-    const { id }         = req.params
+    const { id } = req.params
     const { cancelReason } = req.body
 
     const order = await Order.findById(id)
@@ -283,20 +231,14 @@ export const cancelOrder = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Order not found' })
     }
 
-    // Customers can only cancel their own orders
     if (order.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' })
     }
 
-    // Can only cancel pending or confirmed orders
     if (!['pending', 'confirmed'].includes(order.orderStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Order cannot be cancelled at this stage',
-      })
+      return res.status(400).json({ success: false, message: 'Order cannot be cancelled at this stage' })
     }
 
-    // Restore stock
     for (const item of order.items) {
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: item.quantity, soldCount: -item.quantity },
@@ -311,21 +253,17 @@ export const cancelOrder = async (req, res) => {
       updatedBy: req.user._id,
       note:      cancelReason || 'Cancelled by customer',
     })
-
     await order.save()
 
-    await Payment.findOneAndUpdate(
-      { order: order._id },
-      { paymentStatus: 'cancelled' }
-    )
+    await Payment.findOneAndUpdate({ order: order._id }, { paymentStatus: 'cancelled' })
 
     res.status(200).json({ success: true, message: 'Order cancelled successfully', order })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'cancelOrder')
   }
 }
 
-// @desc    Get order statistics (Admin dashboard)
+// @desc    Get order statistics (Admin)
 // @route   GET /api/orders/stats
 // @access  Private/Admin
 export const getOrderStats = async (req, res) => {
@@ -352,6 +290,6 @@ export const getOrderStats = async (req, res) => {
       recentOrders,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getOrderStats')
   }
 }

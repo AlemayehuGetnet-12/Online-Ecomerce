@@ -85,17 +85,18 @@ const Login = () => {
           <div className="p-7">
             {/* ── Demo quick-fill ── */}
             <div className="mb-5 p-3 bg-orange-50 dark:bg-[#1e293b] rounded-xl border border-orange-200 dark:border-[#334155]">
-              <p className="text-xs text-gray-500 dark:text-[#94a3b8] text-center mb-2">Try a demo account</p>
+              <p className="text-xs text-gray-500 dark:text-[#94a3b8] text-center mb-2">Quick-fill demo accounts</p>
               <div className="flex gap-2">
                 <button type="button" onClick={() => fillDemo('customer')}
                   className="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-[#ea580c] text-white hover:bg-[#c2410c] transition-colors">
-                  👤 Customer Demo
+                  👤 Customer
                 </button>
                 <button type="button" onClick={() => fillDemo('admin')}
                   className="flex-1 py-1.5 text-xs font-semibold rounded-lg border border-[#ea580c] text-[#ea580c] hover:bg-orange-50 dark:hover:bg-[#334155] transition-colors">
-                  🛠 Admin Demo
+                  🛠 Admin
                 </button>
               </div>
+              <p className="text-[10px] text-gray-400 dark:text-[#64748b] text-center mt-1.5">Demo — works on fresh database with default seed</p>
             </div>
 
             {/* ── Form ── */}

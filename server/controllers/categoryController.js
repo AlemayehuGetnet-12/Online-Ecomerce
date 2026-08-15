@@ -18,7 +18,7 @@ export const getCategories = async (req, res) => {
 
     res.status(200).json({ success: true, categories })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/categoryController.js')
   }
 }
 
@@ -42,7 +42,7 @@ export const getCategory = async (req, res) => {
 
     res.status(200).json({ success: true, category })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/categoryController.js')
   }
 }
 
@@ -83,7 +83,7 @@ export const createCategory = async (req, res) => {
 
     res.status(201).json({ success: true, message: 'Category created successfully', category })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/categoryController.js')
   }
 }
 
@@ -124,7 +124,7 @@ export const updateCategory = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Category updated successfully', category })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/categoryController.js')
   }
 }
 
@@ -158,6 +158,8 @@ export const deleteCategory = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Category deleted successfully' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/categoryController.js')
   }
 }
+
+import { serverError } from '../utils/apiError.js'

@@ -95,7 +95,7 @@ export const getSalesReport = async (req, res) => {
 
     res.status(400).json({ success: false, message: 'Invalid period specified' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reportController.js')
   }
 }
 
@@ -132,7 +132,7 @@ export const getRevenueReport = async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reportController.js')
   }
 }
 
@@ -170,7 +170,7 @@ export const getProductReport = async (req, res) => {
       topRated,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reportController.js')
   }
 }
 
@@ -219,7 +219,7 @@ export const getCustomerReport = async (req, res) => {
       })),
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reportController.js')
   }
 }
 
@@ -281,6 +281,8 @@ export const getDashboardSummary = async (req, res) => {
       recentReviews,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reportController.js')
   }
 }
+
+import { serverError } from '../utils/apiError.js'

@@ -404,3 +404,23 @@ button, a, [role="button"] {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Page transition fade */
+.page-enter { animation: fadeIn 0.25s ease-in-out; }
+
+/* Focus visible ring for accessibility */
+:focus-visible {
+  outline: 2px solid #ea580c;
+  outline-offset: 2px;
+}
+
+/* Image lazy load fade-in */
+img[loading="lazy"] { transition: opacity 0.3s ease; }
+img[loading="lazy"]:not([src]) { opacity: 0; }

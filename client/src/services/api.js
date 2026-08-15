@@ -10,6 +10,7 @@ const baseURL = import.meta.env.VITE_API_URL
 
 const api = axios.create({
   baseURL,
+  timeout: 15000, // 15 second timeout — fail fast on Render cold starts
   headers: {
     'Content-Type': 'application/json',
   },
@@ -31,9 +32,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.code === 'ECONNABORTED') {
+      console.error('[API] Request timed out')
+    }
+    // Only redirect to login on 401 if not already on an auth page
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+      const onAuthPage = ['/login', '/register'].some(p => window.location.pathname.startsWith(p))
+      if (!onAuthPage) {
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }
@@ -49,6 +57,9 @@ export const authAPI = {
   getWishlist: () => api.get('/auth/wishlist'),
   addToWishlist: (productId) => api.post(`/auth/wishlist/${productId}`),
   removeFromWishlist: (productId) => api.delete(`/auth/wishlist/${productId}`),
+  // Admin
+  getAllUsers: (params) => api.get('/auth/users', { params }),
+  setUserStatus: (id, data) => api.put(`/auth/users/${id}/status`, data),
 }
 
 // Product APIs

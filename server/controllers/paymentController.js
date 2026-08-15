@@ -1,7 +1,8 @@
 import Payment from '../models/Payment.js'
-import Order from '../models/Order.js'
-import { createTelebirrPayment, verifyTelebirrPayment, handleTelebirrCallback } from '../services/telebirrService.js'
-import { createCBEBirrPayment, verifyCBEBirrPayment, handleCBEBirrCallback } from '../services/cbeBirrService.js'
+import Order   from '../models/Order.js'
+import { createTelebirrPayment, verifyTelebirrPayment } from '../services/telebirrService.js'
+import { createCBEBirrPayment,  verifyCBEBirrPayment  } from '../services/cbeBirrService.js'
+import { serverError } from '../utils/apiError.js'
 
 // @desc    Create Telebirr payment
 // @route   POST /api/payments/telebirr/create
@@ -9,60 +10,40 @@ import { createCBEBirrPayment, verifyCBEBirrPayment, handleCBEBirrCallback } fro
 export const createTelebirrPaymentController = async (req, res) => {
   try {
     const { orderId, phoneNumber } = req.body
-
     if (!orderId || !phoneNumber) {
       return res.status(400).json({ success: false, message: 'Order ID and phone number required' })
     }
 
     const order = await Order.findById(orderId)
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' })
-    }
-
-    if (order.user.toString() !== req.user._id.toString()) {
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' })
+    if (order.user.toString() !== req.user._id.toString())
       return res.status(403).json({ success: false, message: 'Not authorized' })
-    }
-
-    if (order.paymentMethod !== 'telebirr') {
+    if (order.paymentMethod !== 'telebirr')
       return res.status(400).json({ success: false, message: 'Order payment method is not Telebirr' })
-    }
-
-    if (order.paymentStatus === 'paid') {
+    if (order.paymentStatus === 'paid')
       return res.status(400).json({ success: false, message: 'Order already paid' })
-    }
 
     const result = await createTelebirrPayment({
-      orderId:      order._id.toString(),
-      amount:       order.totalAmount,
+      orderId:     order._id.toString(),
+      amount:      order.totalAmount,
       phoneNumber,
-      description:  `Alex Store Order ${order.orderNumber}`,
+      description: `Alex Store Order ${order.orderNumber}`,
     })
 
-    if (!result.success) {
-      return res.status(400).json({ success: false, message: result.message })
-    }
+    if (!result.success) return res.status(400).json({ success: false, message: result.message })
 
-    // Update payment record
     await Payment.findOneAndUpdate(
       { order: order._id },
-      {
-        transactionId:   result.transactionId,
-        phoneNumber,
-        gatewayResponse: result,
-      }
+      { transactionId: result.transactionId, phoneNumber, gatewayResponse: result }
     )
 
     res.status(200).json({
       success: true,
       message: 'Telebirr payment initiated',
-      data: {
-        transactionId: result.transactionId,
-        paymentUrl:    result.paymentUrl,
-        isMock:        result.isMock || false,
-      },
+      data: { transactionId: result.transactionId, paymentUrl: result.paymentUrl, isMock: result.isMock || false },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'createTelebirrPayment')
   }
 }
 
@@ -72,20 +53,12 @@ export const createTelebirrPaymentController = async (req, res) => {
 export const verifyTelebirrPaymentController = async (req, res) => {
   try {
     const { transactionId } = req.body
-
-    if (!transactionId) {
-      return res.status(400).json({ success: false, message: 'Transaction ID required' })
-    }
+    if (!transactionId) return res.status(400).json({ success: false, message: 'Transaction ID required' })
 
     const payment = await Payment.findOne({ transactionId }).populate('order')
-
-    if (!payment) {
-      return res.status(404).json({ success: false, message: 'Payment not found' })
-    }
-
-    if (payment.user.toString() !== req.user._id.toString()) {
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' })
+    if (payment.user.toString() !== req.user._id.toString())
       return res.status(403).json({ success: false, message: 'Not authorized' })
-    }
 
     const result = await verifyTelebirrPayment(transactionId)
 
@@ -97,22 +70,15 @@ export const verifyTelebirrPaymentController = async (req, res) => {
       const order = await Order.findById(payment.order)
       if (order) {
         order.paymentStatus = 'paid'
-        if (order.orderStatus === 'pending') {
-          order.orderStatus = 'confirmed'
-        }
+        if (order.orderStatus === 'pending') order.orderStatus = 'confirmed'
         await order.save()
       }
-
-      return res.status(200).json({
-        success: true,
-        message: 'Payment verified successfully',
-        payment,
-      })
+      return res.status(200).json({ success: true, message: 'Payment verified successfully', payment })
     }
 
     res.status(200).json({ success: false, message: result.message || 'Payment verification failed' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'verifyTelebirrPayment')
   }
 }
 
@@ -122,60 +88,40 @@ export const verifyTelebirrPaymentController = async (req, res) => {
 export const createCBEBirrPaymentController = async (req, res) => {
   try {
     const { orderId, phoneNumber } = req.body
-
     if (!orderId || !phoneNumber) {
       return res.status(400).json({ success: false, message: 'Order ID and phone number required' })
     }
 
     const order = await Order.findById(orderId)
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' })
-    }
-
-    if (order.user.toString() !== req.user._id.toString()) {
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' })
+    if (order.user.toString() !== req.user._id.toString())
       return res.status(403).json({ success: false, message: 'Not authorized' })
-    }
-
-    if (order.paymentMethod !== 'cbe_birr') {
+    if (order.paymentMethod !== 'cbe_birr')
       return res.status(400).json({ success: false, message: 'Order payment method is not CBE Birr' })
-    }
-
-    if (order.paymentStatus === 'paid') {
+    if (order.paymentStatus === 'paid')
       return res.status(400).json({ success: false, message: 'Order already paid' })
-    }
 
     const result = await createCBEBirrPayment({
-      orderId:      order._id.toString(),
-      amount:       order.totalAmount,
+      orderId:     order._id.toString(),
+      amount:      order.totalAmount,
       phoneNumber,
-      description:  `Alex Store Order ${order.orderNumber}`,
+      description: `Alex Store Order ${order.orderNumber}`,
     })
 
-    if (!result.success) {
-      return res.status(400).json({ success: false, message: result.message })
-    }
+    if (!result.success) return res.status(400).json({ success: false, message: result.message })
 
     await Payment.findOneAndUpdate(
       { order: order._id },
-      {
-        transactionId:   result.transactionId,
-        referenceNumber: result.referenceNumber,
-        phoneNumber,
-        gatewayResponse: result,
-      }
+      { transactionId: result.transactionId, referenceNumber: result.referenceNumber, phoneNumber, gatewayResponse: result }
     )
 
     res.status(200).json({
       success: true,
       message: 'CBE Birr payment initiated',
-      data: {
-        transactionId:   result.transactionId,
-        referenceNumber: result.referenceNumber,
-        isMock:          result.isMock || false,
-      },
+      data: { transactionId: result.transactionId, referenceNumber: result.referenceNumber, isMock: result.isMock || false },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'createCBEBirrPayment')
   }
 }
 
@@ -185,20 +131,12 @@ export const createCBEBirrPaymentController = async (req, res) => {
 export const verifyCBEBirrPaymentController = async (req, res) => {
   try {
     const { transactionId } = req.body
-
-    if (!transactionId) {
-      return res.status(400).json({ success: false, message: 'Transaction ID required' })
-    }
+    if (!transactionId) return res.status(400).json({ success: false, message: 'Transaction ID required' })
 
     const payment = await Payment.findOne({ transactionId }).populate('order')
-
-    if (!payment) {
-      return res.status(404).json({ success: false, message: 'Payment not found' })
-    }
-
-    if (payment.user.toString() !== req.user._id.toString()) {
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' })
+    if (payment.user.toString() !== req.user._id.toString())
       return res.status(403).json({ success: false, message: 'Not authorized' })
-    }
 
     const result = await verifyCBEBirrPayment(transactionId)
 
@@ -210,109 +148,20 @@ export const verifyCBEBirrPaymentController = async (req, res) => {
       const order = await Order.findById(payment.order)
       if (order) {
         order.paymentStatus = 'paid'
-        if (order.orderStatus === 'pending') {
-          order.orderStatus = 'confirmed'
-        }
+        if (order.orderStatus === 'pending') order.orderStatus = 'confirmed'
         await order.save()
       }
-
-      return res.status(200).json({
-        success: true,
-        message: 'Payment verified successfully',
-        payment,
-      })
+      return res.status(200).json({ success: true, message: 'Payment verified successfully', payment })
     }
 
     res.status(200).json({ success: false, message: result.message || 'Payment verification failed' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'verifyCBEBirrPayment')
   }
 }
 
-// @desc    Admin approve payment (mark as paid + confirm order)
-// @route   POST /api/payments/:id/approve
-// @access  Private/Admin
-export const approvePayment = async (req, res) => {
-  try {
-    const { id }   = req.params
-    const { notes } = req.body
-
-    const payment = await Payment.findById(id).populate('user', 'name email')
-    if (!payment) {
-      return res.status(404).json({ success: false, message: 'Payment not found' })
-    }
-
-    if (payment.paymentStatus === 'paid') {
-      return res.status(400).json({ success: false, message: 'Payment is already approved' })
-    }
-
-    // Approve payment
-    payment.paymentStatus = 'paid'
-    payment.paidAt        = new Date()
-    if (notes) payment.notes = notes
-    await payment.save()
-
-    // Confirm the linked order
-    const order = await Order.findById(payment.order)
-    if (order) {
-      order.paymentStatus = 'paid'
-      if (['pending'].includes(order.orderStatus)) {
-        order.orderStatus = 'confirmed'
-        order.statusHistory.push({
-          status:    'confirmed',
-          note:      `Payment approved by admin. ${notes || ''}`.trim(),
-          updatedBy: req.user._id,
-        })
-      }
-      await order.save()
-    }
-
-    res.status(200).json({
-      success: true,
-      message: `Payment approved for ${payment.user?.name || 'customer'}`,
-      payment,
-    })
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
-  }
-}
-
-// @desc    Admin reject payment (mark as failed)
-// @route   POST /api/payments/:id/reject
-// @access  Private/Admin
-export const rejectPayment = async (req, res) => {
-  try {
-    const { id }   = req.params
-    const { notes } = req.body
-
-    const payment = await Payment.findById(id).populate('user', 'name email')
-    if (!payment) {
-      return res.status(404).json({ success: false, message: 'Payment not found' })
-    }
-
-    if (payment.paymentStatus === 'paid') {
-      return res.status(400).json({ success: false, message: 'Cannot reject an already approved payment' })
-    }
-
-    payment.paymentStatus = 'failed'
-    payment.failedAt      = new Date()
-    if (notes) payment.notes = notes
-    await payment.save()
-
-    // Update order payment status
-    await Order.findByIdAndUpdate(payment.order, { paymentStatus: 'failed' })
-
-    res.status(200).json({
-      success: true,
-      message: `Payment rejected for ${payment.user?.name || 'customer'}`,
-      payment,
-    })
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
-  }
-}
-
-
+// @desc    Get payment history (customer)
+// @route   GET /api/payments/history
 // @access  Private
 export const getPaymentHistory = async (req, res) => {
   try {
@@ -323,7 +172,7 @@ export const getPaymentHistory = async (req, res) => {
 
     res.status(200).json({ success: true, payments })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getPaymentHistory')
   }
 }
 
@@ -343,22 +192,16 @@ export const getAllPayments = async (req, res) => {
 
     const total    = await Payment.countDocuments(filter)
     const payments = await Payment.find(filter)
-      .populate('user', 'name email phone')
+      .populate('user',  'name email phone')
       .populate('order', 'orderNumber totalAmount')
       .sort('-createdAt')
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
       .lean()
 
-    res.status(200).json({
-      success: true,
-      total,
-      page:    pageNum,
-      pages:   Math.ceil(total / limitNum),
-      payments,
-    })
+    res.status(200).json({ success: true, total, page: pageNum, pages: Math.ceil(total / limitNum), payments })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'getAllPayments')
   }
 }
 
@@ -367,7 +210,7 @@ export const getAllPayments = async (req, res) => {
 // @access  Private/Admin
 export const updatePaymentStatus = async (req, res) => {
   try {
-    const { id }             = req.params
+    const { id } = req.params
     const { paymentStatus, notes } = req.body
 
     const validStatuses = ['pending', 'paid', 'failed', 'cancelled', 'refunded']
@@ -376,24 +219,83 @@ export const updatePaymentStatus = async (req, res) => {
     }
 
     const payment = await Payment.findById(id)
-    if (!payment) {
-      return res.status(404).json({ success: false, message: 'Payment not found' })
-    }
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' })
 
     payment.paymentStatus = paymentStatus
     if (notes) payment.notes = notes
-
     if (paymentStatus === 'paid')     payment.paidAt     = new Date()
     if (paymentStatus === 'failed')   payment.failedAt   = new Date()
     if (paymentStatus === 'refunded') payment.refundedAt = new Date()
 
     await payment.save()
-
-    // Update order payment status
     await Order.findByIdAndUpdate(payment.order, { paymentStatus })
 
     res.status(200).json({ success: true, message: 'Payment status updated', payment })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'updatePaymentStatus')
+  }
+}
+
+// @desc    Admin approve payment
+// @route   POST /api/payments/:id/approve
+// @access  Private/Admin
+export const approvePayment = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { notes } = req.body
+
+    const payment = await Payment.findById(id).populate('user', 'name email')
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' })
+    if (payment.paymentStatus === 'paid')
+      return res.status(400).json({ success: false, message: 'Payment is already approved' })
+
+    payment.paymentStatus = 'paid'
+    payment.paidAt        = new Date()
+    if (notes) payment.notes = notes
+    await payment.save()
+
+    const order = await Order.findById(payment.order)
+    if (order) {
+      order.paymentStatus = 'paid'
+      if (order.orderStatus === 'pending') {
+        order.orderStatus = 'confirmed'
+        order.statusHistory.push({
+          status:    'confirmed',
+          note:      `Payment approved by admin. ${notes || ''}`.trim(),
+          updatedBy: req.user._id,
+        })
+      }
+      await order.save()
+    }
+
+    res.status(200).json({ success: true, message: `Payment approved for ${payment.user?.name || 'customer'}`, payment })
+  } catch (error) {
+    return serverError(res, error, 'approvePayment')
+  }
+}
+
+// @desc    Admin reject payment
+// @route   POST /api/payments/:id/reject
+// @access  Private/Admin
+export const rejectPayment = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { notes } = req.body
+
+    const payment = await Payment.findById(id).populate('user', 'name email')
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' })
+    if (payment.paymentStatus === 'paid')
+      return res.status(400).json({ success: false, message: 'Cannot reject an already approved payment' })
+
+    payment.paymentStatus = 'failed'
+    payment.failedAt      = new Date()
+    if (notes) payment.notes = notes
+    await payment.save()
+
+    await Order.findByIdAndUpdate(payment.order, { paymentStatus: 'failed' })
+
+    res.status(200).json({ success: true, message: `Payment rejected for ${payment.user?.name || 'customer'}`, payment })
+  } catch (error) {
+    return serverError(res, error, 'rejectPayment')
   }
 }

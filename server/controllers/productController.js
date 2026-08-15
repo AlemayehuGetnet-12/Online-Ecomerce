@@ -1,6 +1,7 @@
-import Product from '../models/Product.js'
+import Product  from '../models/Product.js'
 import Category from '../models/Category.js'
 import cloudinary from '../config/cloudinary.js'
+import { serverError } from '../utils/apiError.js'
 
 // @desc    Get all products with search, filter, sort, pagination
 // @route   GET /api/products
@@ -94,7 +95,7 @@ export const getProducts = async (req, res) => {
       products,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -119,7 +120,7 @@ export const getProduct = async (req, res) => {
 
     res.status(200).json({ success: true, product })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -174,7 +175,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json({ success: true, message: 'Product created successfully', product: populated })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -248,7 +249,7 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Product updated successfully', product: populated })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -278,7 +279,7 @@ export const deleteProduct = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Product deleted successfully' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -295,7 +296,7 @@ export const getFeaturedProducts = async (req, res) => {
 
     res.status(200).json({ success: true, products })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -312,7 +313,7 @@ export const getBestSelling = async (req, res) => {
 
     res.status(200).json({ success: true, products })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -329,7 +330,7 @@ export const getOnSaleProducts = async (req, res) => {
 
     res.status(200).json({ success: true, products })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -354,7 +355,7 @@ export const getRelatedProducts = async (req, res) => {
 
     res.status(200).json({ success: true, products: related })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -374,7 +375,7 @@ export const getLowStock = async (req, res) => {
 
     res.status(200).json({ success: true, products })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -402,7 +403,7 @@ export const updateStock = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Stock updated successfully', product })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
 
@@ -448,6 +449,7 @@ export const getAllProductsAdmin = async (req, res) => {
       products,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'productController')
   }
 }
+

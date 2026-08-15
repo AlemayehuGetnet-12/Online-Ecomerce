@@ -42,25 +42,30 @@ async function runSeed () {
   await User.deleteMany({})
 
   // ── Users ────────────────────────────────────────────────
+  // Passwords are loaded from env vars — set these in .env before first run
+  const adminPassword1   = process.env.SEED_ADMIN1_PASSWORD   || 'ChangeMe_Admin1!'
+  const adminPassword2   = process.env.SEED_ADMIN2_PASSWORD   || 'ChangeMe_Admin2!'
+  const customerPassword = process.env.SEED_CUSTOMER_PASSWORD || 'ChangeMe_Customer1!'
+
   await User.create([
     {
       name:     'Tolgi Admin',
-      email:    'tolgi@alexstore.com',
-      password: 'tolgi123',
+      email:    process.env.SEED_ADMIN1_EMAIL || 'tolgi@alexstore.com',
+      password: adminPassword1,
       role:     'admin',
       phone:    '+251931756792',
     },
     {
       name:     'Alex Admin',
-      email:    'admin@alexstore.com',
-      password: 'admin123',
+      email:    process.env.SEED_ADMIN2_EMAIL || 'admin@alexstore.com',
+      password: adminPassword2,
       role:     'admin',
       phone:    '+251911000001',
     },
     {
       name:     'Demo Customer',
-      email:    'customer@alexstore.com',
-      password: 'customer123',
+      email:    process.env.SEED_CUSTOMER_EMAIL || 'customer@alexstore.com',
+      password: customerPassword,
       role:     'customer',
       phone:    '+251911000002',
     },
@@ -130,8 +135,7 @@ async function runSeed () {
   const totalProducts = await Product.countDocuments()
   console.log(`✅ Seeded ${totalProducts} products, ${categories.length} categories, 3 users`)
   console.log('─────────────────────────────────────────────────────')
-  console.log('👤 TOLGI Admin:    tolgi@alexstore.com    / tolgi123')
-  console.log('👤 Alex Admin:     admin@alexstore.com    / admin123')
-  console.log('👤 Customer:       customer@alexstore.com / customer123')
+  console.log('Seed credentials are controlled by SEED_ADMIN1_EMAIL, SEED_ADMIN2_EMAIL,')
+  console.log('SEED_CUSTOMER_EMAIL and their matching PASSWORD env vars.')
   console.log('─────────────────────────────────────────────────────')
 }

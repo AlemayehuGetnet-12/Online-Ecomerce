@@ -37,7 +37,7 @@ export const getProductReviews = async (req, res) => {
       reviews,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
 
@@ -93,7 +93,7 @@ export const createReview = async (req, res) => {
       review:  populated,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
 
@@ -127,7 +127,7 @@ export const updateReview = async (req, res) => {
       review:  populated,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
 
@@ -152,7 +152,7 @@ export const deleteReview = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Review deleted successfully' })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
 
@@ -168,7 +168,7 @@ export const getMyReviews = async (req, res) => {
 
     res.status(200).json({ success: true, reviews })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
 
@@ -195,6 +195,8 @@ export const getAllReviewsAdmin = async (req, res) => {
 
     res.status(200).json({ success: true, total, reviews })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'server/controllers/reviewController.js')
   }
 }
+
+import { serverError } from '../utils/apiError.js'

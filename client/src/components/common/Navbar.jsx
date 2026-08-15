@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth }    from '../../context/AuthContext'
 import { useCart }    from '../../context/CartContext'
 import { useTheme }   from '../../context/ThemeContext'
+import api            from '../../services/api'
 import LanguageSwitcher from './LanguageSwitcher'
 import logo from '../../assets/images/logo.svg'
 import { MenuIcon } from './MenuIcons'
@@ -158,9 +159,8 @@ const SearchBar = ({ onSearch, className = '' }) => {
     timer.current = setTimeout(async () => {
       setLoading(true)
       try {
-        const r = await fetch(`/api/products?search=${encodeURIComponent(val)}&limit=6&sort=-soldCount`)
-        const d = await r.json()
-        setResults(d.products || [])
+        const { data } = await api.get('/products', { params: { search: val, limit: 6, sort: '-soldCount' } })
+        setResults(data.products || [])
         setOpen(true)
       } catch { setResults([]) }
       setLoading(false)

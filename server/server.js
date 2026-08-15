@@ -3,6 +3,9 @@ dotenv.config()   // ← must be FIRST before any other imports use env vars
 
 import express      from 'express'
 import cors         from 'cors'
+import helmet       from 'helmet'
+import rateLimit    from 'express-rate-limit'
+import mongoSanitize from 'express-mongo-sanitize'
 import path         from 'path'
 import { fileURLToPath } from 'url'
 import connectDB     from './config/database.js'
@@ -18,29 +21,67 @@ import reviewRoutes   from './routes/reviewRoutes.js'
 import reportRoutes   from './routes/reportRoutes.js'
 import contactRoutes  from './routes/contactRoutes.js'
 
+// ── JWT secret guard ─────────────────────────────────────────────
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error('❌ FATAL: JWT_SECRET must be set to a strong random string (32+ chars)')
+  process.exit(1)
+}
+
+// ── CORS origin list ─────────────────────────────────────────────
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((u) => u.trim())
+  : null
+
+if (process.env.NODE_ENV === 'production' && !allowedOrigins) {
+  console.error('❌ FATAL: CLIENT_URL must be set in production')
+  process.exit(1)
+}
+
 const app = express()
 
 // ── ES module dirname ───────────────────────────────────────────
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
 
-// ── CORS ────────────────────────────────────────────────────────
-// Allow comma-separated origins in CLIENT_URL, or fall back to '*'
-const clientUrls = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.split(',').map((u) => u.trim())
-  : '*'
+// ── Security headers (helmet) ────────────────────────────────────
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images from CDN
+  contentSecurityPolicy: false, // handled by frontend
+}))
 
-app.use(
-  cors({
-    origin: clientUrls,
-    credentials: true,
-  })
-)
+// ── CORS ────────────────────────────────────────────────────────
+app.use(cors({
+  origin: allowedOrigins || true, // true = allow all in dev
+  credentials: true,
+}))
+
+// ── Rate limiting ────────────────────────────────────────────────
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max:      15,
+  standardHeaders: true,
+  legacyHeaders:   false,
+  message: { success: false, message: 'Too many attempts. Please try again in 15 minutes.' },
+})
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max:      300,
+  standardHeaders: true,
+  legacyHeaders:   false,
+  message: { success: false, message: 'Too many requests. Please slow down.' },
+})
+
+app.use('/api/auth/login',    authLimiter)
+app.use('/api/auth/register', authLimiter)
+app.use('/api/',              apiLimiter)
 
 // ── Body parsing ────────────────────────────────────────────────
-
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+
+// ── NoSQL injection sanitization ────────────────────────────────
+app.use(mongoSanitize())
 
 // ── Static files (uploads) ───────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))

@@ -1,5 +1,6 @@
 import User from '../models/User.js'
 import generateToken from '../utils/generateToken.js'
+import { serverError } from '../utils/apiError.js'
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -53,7 +54,7 @@ export const register = async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -115,7 +116,7 @@ export const login = async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -140,7 +141,7 @@ export const getMe = async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -179,7 +180,7 @@ export const updateProfile = async (req, res) => {
       },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -224,7 +225,7 @@ export const changePassword = async (req, res) => {
       message: 'Password changed successfully',
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -247,7 +248,7 @@ export const addToWishlist = async (req, res) => {
       wishlist: user.wishlist,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -268,7 +269,7 @@ export const removeFromWishlist = async (req, res) => {
       wishlist: user.wishlist,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -284,7 +285,7 @@ export const getWishlist = async (req, res) => {
       wishlist: user.wishlist,
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -312,7 +313,7 @@ export const getAllUsers = async (req, res) => {
 
     res.status(200).json({ success: true, total, users })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
 
@@ -347,6 +348,7 @@ export const setUserStatus = async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, isActive: user.isActive, role: user.role },
     })
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    return serverError(res, error, 'authController')
   }
 }
+

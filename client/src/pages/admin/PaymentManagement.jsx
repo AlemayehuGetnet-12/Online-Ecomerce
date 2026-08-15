@@ -50,7 +50,7 @@ const PaymentManagement = () => {
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-[#5b76b8] text-xs text-gray-600 dark:text-[#94a3b8] uppercase">
+            <thead className="bg-gray-50 dark:bg-[#0f172a] text-xs text-gray-600 dark:text-[#94a3b8] uppercase">
               <tr>{['Customer','Order','Amount','Method','Status','Date','Action'].map(h=><th key={h} className="px-5 py-3 text-left font-semibold">{h}</th>)}</tr>
             </thead>
             <tbody>
