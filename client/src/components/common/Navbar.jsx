@@ -24,14 +24,14 @@ const MENUS = [
       {
         heading: 'All Products', to: '/products',
         items: [
-          { label: 'All Products',  to: '/products',                       icon: '🛍️' },
-          { label: 'Best Sellers',  to: '/products?sort=-soldCount',        icon: '🔥' },
-          { label: 'New Arrivals',  to: '/products?sort=-createdAt',        icon: '✨' },
-          { label: 'On Sale',       to: '/products?discount=true',          icon: '🏷️' },
-          { label: 'Electronics',   to: '/products?category=electronics',   icon: '📱' },
-          { label: 'Fashion',       to: '/products?category=fashion',       icon: '👗' },
-          { label: 'Beauty',        to: '/products?category=beauty',        icon: '💄' },
-          { label: 'Food',          to: '/products?category=food',          icon: '☕' },
+          { label: 'All Products',  to: '/products',                       icon: '🛍️', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=48&q=70' },
+          { label: 'Best Sellers',  to: '/products?sort=-soldCount',        icon: '🔥', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=48&q=70' },
+          { label: 'New Arrivals',  to: '/products?sort=-createdAt',        icon: '✨', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=48&q=70' },
+          { label: 'On Sale',       to: '/products?discount=true',          icon: '🏷️', img: 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=48&q=70' },
+          { label: 'Electronics',   to: '/products?category=electronics',   icon: '📱', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=48&q=70' },
+          { label: 'Fashion',       to: '/products?category=fashion',       icon: '👗', img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=48&q=70' },
+          { label: 'Beauty',        to: '/products?category=beauty',        icon: '💄', img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=48&q=70' },
+          { label: 'Food',          to: '/products?category=food',          icon: '☕', img: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=48&q=70' },
         ],
       },
     ],
@@ -42,12 +42,12 @@ const MENUS = [
       {
         heading: 'About Alex Store', to: '/about',
         items: [
-          { label: 'About Us',      to: '/about',            icon: '🏢' },
-          { label: 'Our Story',     to: '/about/story',      icon: '📖' },
-          { label: 'Careers',       to: '/about/careers',    icon: '💼' },
-          { label: 'Our Brands',    to: '/about/brands',     icon: '🏷️' },
-          { label: 'Press & Media', to: '/about/press',      icon: '📰' },
-          { label: 'The Developer', to: '/about/developer',  icon: '👤' },
+          { label: 'About Us',      to: '/about',            icon: '🏢', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=48&q=70' },
+          { label: 'Our Story',     to: '/about/story',      icon: '📖', img: 'https://images.unsplash.com/photo-1519791883288-dc8bd696e667?w=48&q=70' },
+          { label: 'Careers',       to: '/about/careers',    icon: '💼', img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=48&q=70' },
+          { label: 'Our Brands',    to: '/about/brands',     icon: '🏷️', img: 'https://images.unsplash.com/photo-1493723843671-1d655e66ac1c?w=48&q=70' },
+          { label: 'Press & Media', to: '/about/press',      icon: '📰', img: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=48&q=70' },
+          { label: 'The Developer', to: '/about/developer',  icon: '👤', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=48&q=70' },
         ],
       },
     ],
@@ -58,11 +58,11 @@ const MENUS = [
       {
         heading: 'Customer Service', to: '/help',
         items: [
-          { label: 'Help Center',       to: '/help',     icon: '❓' },
-          { label: 'Shipping Info',     to: '/shipping', icon: '🚚' },
-          { label: 'Returns & Refunds', to: '/returns',  icon: '↩️' },
-          { label: 'Contact Us',        to: '/contact',  icon: '💬' },
-          { label: 'Track My Order',    to: '/orders',   icon: '📦' },
+          { label: 'Help Center',       to: '/help',     icon: '❓', img: 'https://images.unsplash.com/photo-1553775927-a071d5a6a39a?w=48&q=70' },
+          { label: 'Shipping Info',     to: '/shipping', icon: '🚚', img: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=48&q=70' },
+          { label: 'Returns & Refunds', to: '/returns',  icon: '↩️', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=48&q=70' },
+          { label: 'Contact Us',        to: '/contact',  icon: '💬', img: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=48&q=70' },
+          { label: 'Track My Order',    to: '/orders',   icon: '📦', img: 'https://images.unsplash.com/photo-1601599561213-832382fd07ba?w=48&q=70' },
         ],
       },
     ],
@@ -73,12 +73,15 @@ const MENUS = [
       {
         heading: 'Shop', to: '/products',
         items: [
-          { label: 'Best Sellers',  to: '/products?sort=-soldCount',      icon: '🔥' },
-          { label: 'New Arrivals',  to: '/products?sort=-createdAt',      icon: '✨' },
-          { label: 'Fashion',       to: '/products?category=fashion',     icon: '👗' },
-          { label: 'Electronics',   to: '/products?category=electronics', icon: '📱' },
-          { label: 'On Sale',       to: '/products?discount=true',        icon: '🏷️' },
-          { label: 'Featured',      to: '/products?isFeatured=true',      icon: '⭐' },
+          { label: 'Best Sellers',  to: '/products?sort=-soldCount',      icon: '🔥', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=48&q=70' },
+          { label: 'New Arrivals',  to: '/products?sort=-createdAt',      icon: '✨', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=48&q=70' },
+          { label: 'Fashion',       to: '/products?category=fashion',     icon: '👗', img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=48&q=70' },
+          { label: 'Electronics',   to: '/products?category=electronics', icon: '📱', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=48&q=70' },
+          { label: 'Food & Coffee', to: '/products?category=food',        icon: '☕', img: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=48&q=70' },
+          { label: 'Accessories',   to: '/products?category=accessories', icon: '👜', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=48&q=70' },
+          { label: 'Sports',        to: '/products?category=sports',      icon: '🏋️', img: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=48&q=70' },
+          { label: 'On Sale',       to: '/products?discount=true',        icon: '🏷️', img: 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=48&q=70' },
+          { label: 'Featured',      to: '/products?isFeatured=true',      icon: '⭐', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=48&q=70' },
         ],
       },
     ],
@@ -109,20 +112,28 @@ const MegaDropdown = ({ menu, onClose }) => {
 
       {open && (
         <div className="absolute top-full mt-1 left-0 z-50 animate-fade-in"
-          style={{ minWidth: '200px' }}>
+          style={{ minWidth: '260px' }}>
           <div className="bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-[#334155] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] overflow-hidden">
             {/* header strip */}
             <Link to={menu.sections[0].to} onClick={close}
-              className="block px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:opacity-90 transition-opacity"
+              className="block px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(90deg,#ea580c,#c2410c)' }}>
               {menu.sections[0].heading}
             </Link>
             <div className="py-1">
               {menu.sections[0].items.map(item => (
                 <Link key={item.label} to={item.to} onClick={close}
-                  className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 dark:text-[#e2e8f0] hover:bg-orange-50 dark:hover:bg-[#334155] hover:text-[#ea580c] transition-colors">
-                  <MenuIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
-                  {item.label}
+                  className="flex items-center gap-3 px-3 py-1.5 text-sm text-gray-700 dark:text-[#e2e8f0] hover:bg-orange-50 dark:hover:bg-[#334155] hover:text-[#ea580c] transition-colors group">
+                  {/* category image thumbnail */}
+                  <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 dark:border-[#334155]">
+                    <img
+                      src={item.img}
+                      alt={item.label}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
+                      loading="lazy"
+                    />
+                  </div>
+                  <span className="font-medium">{item.label}</span>
                 </Link>
               ))}
             </div>
@@ -446,8 +457,10 @@ const Navbar = () => {
                 </Link>
                 {m.sections[0].items.map(item => (
                   <Link key={item.label} to={item.to} onClick={close}
-                    className="mob-item flex items-center gap-2.5 px-5 py-2 text-sm nav-text rounded-lg transition-colors">
-                    <MenuIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
+                    className="mob-item flex items-center gap-3 px-5 py-2 text-sm nav-text rounded-lg transition-colors">
+                    <div className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200/50 dark:border-[#334155]">
+                      <img src={item.img} alt={item.label} className="w-full h-full object-cover" loading="lazy" />
+                    </div>
                     {item.label}
                   </Link>
                 ))}
